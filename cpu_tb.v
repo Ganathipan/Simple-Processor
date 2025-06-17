@@ -63,7 +63,7 @@ module cpu_tb;
         RESET = 0;
 
         // Run for 4 cycles
-        for (i = 0; i < 5; i = i + 1) begin
+        for (i = 0; i < 20; i = i + 1) begin
             @(posedge CLK);
         end
 

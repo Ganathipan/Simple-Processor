@@ -32,42 +32,30 @@ endmodule
 module mulUnit (
     input  signed [7:0] DATA1,      // Multiplicand
     input  signed [7:0] DATA2,      // Multiplier
+    input ENABLE,
     output reg signed [7:0] RESULT // Final 16-bit signed product
     );
 
-    reg signed [15:0] A;            // +Multiplicand shifted left
-    reg signed [15:0] S;            // -Multiplicand shifted left
-    reg signed [16:0] P;            // Product register: {A[7:0], Q[7:0], Q-1}
     integer i;
+    reg [15:0] temp1, temp2;
 
     always @(*) begin
-            // Prepare multiplicand (+ and - versions)
-            A = {DATA1, 8'b0};       // Left shift multiplicand by 8 bits
-            S = {-DATA1, 8'b0};      // Left shift negative multiplicand
+        temp1 = 16'b0;
+        temp2 = {8'b0, DATA1};
 
-            // Initialize P with multiplier and extra Q-1 bit
-            P = {8'b0, DATA2, 1'b0}; // {accumulator=0, multiplier, Q-1=0}
+        for (i = 0; i < 8; i = i + 1) begin
+            if (DATA2[i]) temp1 = temp1 + temp2;
+            temp2 = {temp2, 1'b0};
+        end
 
-            // Booth's Algorithm Iteration
-            for (i = 0; i < 8; i = i + 1) begin
-                case (P[1:0])  // Examine Q0 and Q-1
-                    2'b01: P[16:1] = P[16:1] + A; // Add A
-                    2'b10: P[16:1] = P[16:1] + S; // Subtract A (add -A)
-                    default: ;                   // No operation
-                endcase
-
-                // Arithmetic right shift of P (preserve sign)
-                P = {P[16], P[16:1]};
-            end
-
-            // Assign final result (ignore Q-1 bit)
-            #3 RESULT = P[8:1]; 
+        RESULT = ENABLE ? temp1[7:0] : 8'b0; 
     end
 endmodule
 
 module shifterUnit (    
     input  [7:0] DATA1,     // 8-bit input DATA1
     input  [7:0] DATA2,     // 8-bit input DATA2
+    input  ENABLE,
     output reg [7:0] RESULT // 8-bit output RESULT
     );
 
@@ -75,6 +63,7 @@ module shifterUnit (
     reg sign;
 
     always @(*) begin
+        if (ENABLE) begin
         RESULT = DATA1;
         sign = DATA1[7];
         for (i = 0; i < DATA2[3:0]; i = i + 1) begin
@@ -85,7 +74,11 @@ module shifterUnit (
                 2'b11: RESULT = {RESULT[0], RESULT[7:1]};     // Rotate right (ror)
             endcase
         end
-        #4; // Delay for shifting
+        //#4; // Delay for shifting
+        end 
+        else begin
+            RESULT = 8'B0;
+        end
     end
 endmodule
 
@@ -98,13 +91,17 @@ module aluUnit(
     );
 
     wire [7:0] sum, andOut, orOut, fwdOut, mulOut, shiftOut;
+    wire SHIFT_E;
+
+    assign SHIFT_E = (ALUOP == 3'b101) ? 1'b1: 1'b0;
+    assign MUL_E   = (ALUOP == 3'b100) ? 1'b1: 1'b0;
 
     fwdUnit     u0 (.RESULT(fwdOut)  , .DATA2(DATA2));
     addUnit     u1 (.RESULT(sum)     , .DATA1(DATA1), .DATA2(DATA2));
     andUnit     u3 (.RESULT(andOut)  , .DATA1(DATA1), .DATA2(DATA2));
     orUnit      u4 (.RESULT(orOut)   , .DATA1(DATA1), .DATA2(DATA2));
-    mulUnit     u5 (.RESULT(mulOut)  , .DATA1(DATA1), .DATA2(DATA2));
-    shifterUnit u6 (.RESULT(shiftOut), .DATA1(DATA1), .DATA2(DATA2));
+    mulUnit     u5 (.RESULT(mulOut)  , .DATA1(DATA1), .DATA2(DATA2), .ENABLE(MUL_E));
+    shifterUnit u6 (.RESULT(shiftOut), .DATA1(DATA1), .DATA2(DATA2), .ENABLE(SHIFT_E));
     
     always @(*) begin
         case (ALUOP)

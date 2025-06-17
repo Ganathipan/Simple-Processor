@@ -28,8 +28,7 @@ module pcIncrementer (
     always @(*) begin
         PC <= #1 PC_IN + 32'd4;
  
-        offset <= {{22{BRANCH_ADDRESS[7]}}, BRANCH_ADDRESS, 2'b00}; 
-        offset <= #2 PC + offset;
+        offset <= #2 PC + {{22{BRANCH_ADDRESS[7]}}, BRANCH_ADDRESS, 2'b00}; 
 
         PC_OUT =    JUMP ? offset : 
                     (BRANCH == 2'b01 && ZERO) ? offset : 

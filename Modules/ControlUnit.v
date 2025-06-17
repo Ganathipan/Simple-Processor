@@ -38,7 +38,7 @@ module control_unit(
 
         JUMP_CONTROL     = (OPCODE == OP_J)     ? 1'b1 : 1'b0;
 
-        SIGN_CONTROL     = (OPCODE == OP_SUB)   ? 1'b1 : 1'b0;
+        SIGN_CONTROL     = (OPCODE == OP_SUB || OPCODE == OP_BEQ || OPCODE == OP_BNE)   ? 1'b1 : 1'b0;
 
         OPERAND_CONTROL  = (OPCODE == OP_LOADI || OPCODE == OP_SHIFT) ? 1'b1 : 1'b0;
 
