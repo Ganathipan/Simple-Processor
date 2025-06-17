@@ -148,9 +148,9 @@ module reg_file(
     wire [31:0] r6 = reg_array[6];
     wire [31:0] r7 = reg_array[7];
 
-    always @(posedge CLK) begin
-        OUT1 = #2 reg_array[OUT1ADDRESS];   
-        OUT2 = #2 reg_array[OUT2ADDRESS];
+    always @(*) begin
+        OUT1 <= #2 reg_array[OUT1ADDRESS];   
+        OUT2 <= #2 reg_array[OUT2ADDRESS];
     end
 
     always @(posedge CLK) begin
@@ -210,9 +210,7 @@ module control_unit(
     localparam OP_BNE   = 8'b00001010;
 
     always @(opcode) begin 
-        #1 // Delay decoding
-
-        ALUOP = (opcode == OP_ADD)   ? 3'b001 :
+        ALUOP <= #1 (opcode == OP_ADD)   ? 3'b001 :
                 (opcode == OP_SUB)   ? 3'b001 :
                 (opcode == OP_AND)   ? 3'b010 :
                 (opcode == OP_OR)    ? 3'b011 :
@@ -249,10 +247,10 @@ module pcIncrementer (
     reg [31:0] offset;
 
     always @(*) begin
-        #1 PC = pc_in + 32'd4;
+        PC <= #1 pc_in + 32'd4;
  
-        #1 offset = {{22{branchAddress[7]}}, branchAddress, 2'b00}; 
-        #1 offset = PC + offset;
+        offset <= #1 {{22{branchAddress[7]}}, branchAddress, 2'b00}; 
+        offset <= #1 PC + offset;
 
         pc_out =    jump ? offset : 
                     (branch == 2'b01 && zero) ? offset : 
@@ -323,7 +321,7 @@ module CPU(
         end
         else begin
             if (signControl) begin
-                #2 alu_data1 = (~OPERAND1 + 8'b1);
+                alu_data1 <= #2 (~OPERAND1 + 8'b1);
             end
             else begin
                 alu_data1 = OPERAND1;
