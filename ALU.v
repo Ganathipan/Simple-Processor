@@ -32,7 +32,7 @@ endmodule
 module mulUnit (
     input  signed [7:0] DATA1,      // Multiplicand
     input  signed [7:0] DATA2,      // Multiplier
-    output reg signed [15:0] RESULT // Final 16-bit signed product
+    output reg signed [7:0] RESULT // Final 16-bit signed product
     );
 
     reg signed [15:0] A;            // +Multiplicand shifted left

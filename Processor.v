@@ -1,0 +1,343 @@
+module fwdUnit (
+    input [7:0] DATA2,
+    output [7:0] RESULT);
+    
+    assign #1 RESULT = DATA2;
+endmodule
+
+module addUnit (
+    input  [7:0] DATA1,
+    input  [7:0] DATA2,
+    output [7:0] RESULT);
+
+    assign #2 RESULT = DATA1 + DATA2;
+endmodule
+
+module andUnit (
+    input  [7:0] DATA1,
+    input  [7:0] DATA2,
+    output [7:0] RESULT);
+
+    assign #1 RESULT = DATA1 & DATA2;
+endmodule
+
+module orUnit (
+    input  [7:0] DATA1,
+    input  [7:0] DATA2,
+    output [7:0] RESULT);
+
+    assign #1 RESULT = DATA1 | DATA2;
+endmodule
+
+module mulUnit (
+    input  signed [7:0] DATA1,      // Multiplicand
+    input  signed [7:0] DATA2,      // Multiplier
+    output reg signed [7:0] RESULT // Final 16-bit signed product
+    );
+
+    reg signed [15:0] A;            // +Multiplicand shifted left
+    reg signed [15:0] S;            // -Multiplicand shifted left
+    reg signed [16:0] P;            // Product register: {A[7:0], Q[7:0], Q-1}
+    integer i;
+
+    always @(*) begin
+            // Prepare multiplicand (+ and - versions)
+            A = {DATA1, 8'b0};       // Left shift multiplicand by 8 bits
+            S = {-DATA1, 8'b0};      // Left shift negative multiplicand
+
+            // Initialize P with multiplier and extra Q-1 bit
+            P = {8'b0, DATA2, 1'b0}; // {accumulator=0, multiplier, Q-1=0}
+
+            // Booth's Algorithm Iteration
+            for (i = 0; i < 8; i = i + 1) begin
+                case (P[1:0])  // Examine Q0 and Q-1
+                    2'b01: P[16:1] = P[16:1] + A; // Add A
+                    2'b10: P[16:1] = P[16:1] + S; // Subtract A (add -A)
+                    default: ;                   // No operation
+                endcase
+
+                // Arithmetic right shift of P (preserve sign)
+                P = {P[16], P[16:1]};
+            end
+
+            // Assign final result (ignore Q-1 bit)
+            #3 RESULT = P[8:1]; 
+    end
+endmodule
+
+module shifterUnit (    
+    input  [7:0] DATA1,     // 8-bit input DATA1
+    input  [7:0] DATA2,     // 8-bit input DATA2
+    output reg [7:0] RESULT // 8-bit output RESULT
+    );
+
+    integer i;
+    reg sign;
+
+    always @(*) begin
+        RESULT = DATA1;
+        sign = DATA1[7];
+        for (i = 0; i < DATA2[3:0]; i = i + 1) begin
+            case (DATA2[5:4])
+                2'b00: RESULT = {RESULT[6:0], 1'b0};          // Logical shift left (sll)
+                2'b01: RESULT = {1'b0, RESULT[7:1]};          // Logical shift right (srl)
+                2'b10: RESULT = {sign, RESULT[7:1]};          // Arithmetic shift right (sra)
+                2'b11: RESULT = {RESULT[0], RESULT[7:1]};     // Rotate right (ror)
+            endcase
+        end
+        #4; // Delay for shifting
+    end
+endmodule
+
+module aluUnit(
+    input [7:0] DATA1,        // 8-bit input DATA1
+    input [7:0] DATA2,        // 8-bit input DATA2
+    input [2:0] ALUOP,     // 3-bit selector to choose operation
+    output reg [7:0] RESULT,   // 8-bit output RESULT
+    output reg ZERO
+    );
+
+    wire [7:0] sum, andOut, orOut, fwdOut, mulOut, shiftOut;
+
+    fwdUnit     u0 (.RESULT(fwdOut)  , .DATA2(DATA2));
+    addUnit     u1 (.RESULT(sum)     , .DATA1(DATA1), .DATA2(DATA2));
+    andUnit     u3 (.RESULT(andOut)  , .DATA1(DATA1), .DATA2(DATA2));
+    orUnit      u4 (.RESULT(orOut)   , .DATA1(DATA1), .DATA2(DATA2));
+    mulUnit     u5 (.RESULT(mulOut)  , .DATA1(DATA1), .DATA2(DATA2));
+    shifterUnit u6 (.RESULT(shiftOut), .DATA1(DATA1), .DATA2(DATA2));
+    
+    always @(*) begin
+        case (ALUOP)
+            3'b000: RESULT = fwdOut;    
+            3'b001: RESULT = sum;      
+            3'b010: RESULT = andOut;  
+            3'b011: RESULT = orOut;
+            3'b100: RESULT = mulOut;
+            3'b101: RESULT = shiftOut;                
+            default: RESULT = 8'b0; 
+        endcase
+
+        // Sets the ZERO flag if the result is zero
+        ZERO = (sum == 0) ? 1'b1: 1'b0;  
+    end
+endmodule
+
+// registerFile.v - Register File module
+// This module implements a register file with read and write capabilities.
+// It has 8 registers, each 8 bits wide.
+
+module reg_file(
+    input [7:0] INDATA,             // Data to write
+    input [2:0] INADDRESS,          // Address of register to write
+    input [2:0] OUT1ADDRESS,        // Address of register to read (port 1)
+    input [2:0] OUT2ADDRESS,        // Address of register to read (port 2)
+    output reg [7:0] OUT1DATA,      // Data output from register (port 1)
+    output reg [7:0] OUT2DATA,      // Data output from register (port 2)
+    input CLK,                      // Clock signal
+    input RESET,                    // Reset signal (active high)
+    input  WRITE                    // Write enable signal
+    );
+
+    reg [7:0] reg_array [0:7]; 
+
+    // Expose registers as wires for waveform dumping
+        wire [7:0] r0 = reg_array[0];
+        wire [7:0] r1 = reg_array[1];
+        wire [7:0] r2 = reg_array[2];
+        wire [7:0] r3 = reg_array[3];
+        wire [7:0] r4 = reg_array[4];
+        wire [7:0] r5 = reg_array[5];
+        wire [7:0] r6 = reg_array[6];
+        wire [7:0] r7 = reg_array[7];
+
+    always @(*) begin
+        OUT1DATA <= #2 reg_array[OUT1ADDRESS];  // Output data from register reg1
+        OUT2DATA <= #2 reg_array[OUT2ADDRESS];  // Output data from register reg2
+    end
+
+    // On write enable, write data to specified register on positive edge of Clock
+    always @(posedge CLK) begin
+        if(WRITE == 1'b1  &&  RESET == 1'b0) begin 
+            reg_array[INADDRESS] <= #1 INDATA;
+        end
+    end
+
+    // On reset, clear all registers
+    integer counter;             
+    always @(posedge CLK) begin
+        if(RESET == 1'b1) begin
+            for(counter = 0; counter < 8; counter = counter + 1) begin
+                reg_array[counter] <= #1 8'b00000000;
+            end
+        end
+    end
+endmodule
+
+module control_unit(
+    input [7:0] OPCODE,
+    output reg WRITE_ENABLE,
+    output reg [2:0] ALUOP,
+    output reg SIGN_CONTROL,
+    output reg OPERAND_CONTROL,
+    output reg [1:0] BRANCH_CONTROL,
+    output reg JUMP_CONTROL
+    );
+
+    // ALU operation codes
+    localparam OP_LOADI = 8'b00000000;
+    localparam OP_MOV   = 8'b00000001;
+    localparam OP_ADD   = 8'b00000010;
+    localparam OP_SUB   = 8'b00000011;
+    localparam OP_AND   = 8'b00000100;
+    localparam OP_OR    = 8'b00000101;
+    localparam OP_J     = 8'b00000110;
+    localparam OP_BEQ   = 8'b00000111;
+    
+    localparam OP_MUL   = 8'b00001000;
+    localparam OP_SHIFT = 8'b00001001;
+    localparam OP_BNE   = 8'b00001010;
+
+    always @(OPCODE) begin 
+        ALUOP <= #1 (OPCODE == OP_ADD)   ? 3'b001 :
+                (OPCODE == OP_SUB)   ? 3'b001 :
+                (OPCODE == OP_AND)   ? 3'b010 :
+                (OPCODE == OP_OR)    ? 3'b011 :
+                (OPCODE == OP_MOV)   ? 3'b000 :
+                (OPCODE == OP_LOADI) ? 3'b000 :
+                (OPCODE == OP_MUL)   ? 3'b100 :
+                (OPCODE == OP_SHIFT) ? 3'b101 :
+                3'b000;
+
+        BRANCH_CONTROL   = (OPCODE == OP_BEQ)   ? 2'b01 : 
+                           (OPCODE == OP_BNE)   ? 2'b10 : 2'b00;
+
+        JUMP_CONTROL     = (OPCODE == OP_J)     ? 1'b1 : 1'b0;
+
+        SIGN_CONTROL     = (OPCODE == OP_SUB)   ? 1'b1 : 1'b0;
+
+        OPERAND_CONTROL  = (OPCODE == OP_LOADI || OPCODE == OP_SHIFT) ? 1'b1 : 1'b0;
+
+        WRITE_ENABLE  = (OPCODE == OP_LOADI || OPCODE == OP_MOV || OPCODE == OP_ADD ||
+                    OPCODE == OP_SUB || OPCODE == OP_AND || OPCODE == OP_OR ||
+                    OPCODE == OP_MUL || OPCODE == OP_SHIFT) ? 1'b1 : 1'b0;
+    end
+endmodule
+
+module ProgramCounter(
+    input CLK, RESET,
+    input      [31:0] PC_IN,
+    output reg [31:0] PC_OUT
+    );
+
+    always @(posedge CLK or posedge RESET) begin 
+        if (RESET) begin
+            PC_OUT <= #1 32'b0;
+        end
+        else begin
+            PC_OUT <= #1 PC_IN;
+        end
+    end
+endmodule
+
+module pcIncrementer (
+    input [31:0] PC_IN,
+    input [7:0]  BRANCH_ADDRESS,
+    input [1:0]  BRANCH, 
+    input        JUMP, ZERO,
+    output reg [31:0] PC_OUT
+    );
+
+    reg [31:0] PC;
+    reg [31:0] offset;
+
+    always @(*) begin
+        PC <= #1 PC_IN + 32'd4;
+ 
+        offset <= {{22{BRANCH_ADDRESS[7]}}, BRANCH_ADDRESS, 2'b00}; 
+        offset <= #2 PC + offset;
+
+        PC_OUT =    JUMP ? offset : 
+                    (BRANCH == 2'b01 && ZERO) ? offset : 
+                    (BRANCH == 2'b10 && !ZERO) ? offset : PC;
+    end
+endmodule
+
+module CPU(
+    input [31:0] INSTRUCTION,
+    input CLK, RESET, 
+    output wire [31:0] PC_OUT
+    );
+
+    wire [7:0] OPERAND1, OPERAND2, ALURESULT;
+    wire [2:0] ALUOP;
+    wire REG_WRITE_ENABLE;
+    wire SIGN_CONTROL, OPERAND_CONTROL;
+
+    wire [1:0] BRANCH_CONTROL;
+    wire JUMP_CONTROL;
+    wire ZERO_FLAG;              // to control the gates for beq instruction
+    wire [31:0] PC_IN;
+
+    ProgramCounter u_pc (
+        .CLK(CLK),
+        .RESET(RESET),
+        .PC_IN(PC_IN),
+        .PC_OUT(PC_OUT)
+    );
+
+    pcIncrementer u_pcIn (
+        .PC_IN(PC_OUT),
+        .BRANCH_ADDRESS(INSTRUCTION[15:8]),
+        .BRANCH(BRANCH_CONTROL), 
+        .JUMP(JUMP_CONTROL), 
+        .ZERO(ZERO_FLAG),
+        .PC_OUT(PC_IN)
+    );
+    
+    control_unit u_control (
+        .OPCODE (INSTRUCTION[7:0]),
+        .WRITE_ENABLE(REG_WRITE_ENABLE),
+        .ALUOP(ALUOP),
+        .SIGN_CONTROL(SIGN_CONTROL),
+        .OPERAND_CONTROL(OPERAND_CONTROL),
+        .BRANCH_CONTROL(BRANCH_CONTROL),
+        .JUMP_CONTROL(JUMP_CONTROL)
+    );
+
+    reg_file u_regfile (
+        .INDATA(ALURESULT),
+        .INADDRESS(INSTRUCTION[10:8]),
+        .OUT1ADDRESS(INSTRUCTION[18:16]),
+        .OUT2ADDRESS(INSTRUCTION[26:24]),
+        .OUT1DATA(OPERAND1),
+        .OUT2DATA(OPERAND2),
+        .WRITE(REG_WRITE_ENABLE),
+        .CLK(CLK),
+        .RESET(RESET)
+    ); 
+
+    reg [7:0] ALU_IN_DATA1, ALU_IN_DATA2;
+
+    always @(*) begin
+        ALU_IN_DATA1 = OPERAND1;
+        if (OPERAND_CONTROL) begin
+            ALU_IN_DATA2 = INSTRUCTION[31:24];
+        end
+        else begin
+            if (SIGN_CONTROL) begin
+                ALU_IN_DATA2 <= #2 (~OPERAND2 + 8'b1);
+            end
+            else begin
+                ALU_IN_DATA2 = OPERAND2;
+            end
+        end
+    end    
+
+    aluUnit u_alu (
+        .DATA1(ALU_IN_DATA1),
+        .DATA2(ALU_IN_DATA2),
+        .ALUOP(ALUOP),
+        .RESULT(ALURESULT),
+        .ZERO(ZERO_FLAG)
+    );
+endmodule

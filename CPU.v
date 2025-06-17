@@ -41,12 +41,12 @@ module CPU(
     );
 
     reg_file u_regfile (
-        .IN(ALURESULT),
+        .INDATA(ALURESULT),
         .INADDRESS(INSTRUCTION[10:8]),
         .OUT1ADDRESS(INSTRUCTION[18:16]),
         .OUT2ADDRESS(INSTRUCTION[26:24]),
-        .OUT1(OPERAND1),
-        .OUT2(OPERAND2),
+        .OUT1DATA(OPERAND1),
+        .OUT2DATA(OPERAND2),
         .WRITE(REG_WRITE_ENABLE),
         .CLK(CLK),
         .RESET(RESET)
@@ -60,7 +60,7 @@ module CPU(
             ALU_IN_DATA2 = INSTRUCTION[31:24];
         end
         else begin
-            if (signControl) begin
+            if (SIGN_CONTROL) begin
                 ALU_IN_DATA2 <= #2 (~OPERAND2 + 8'b1);
             end
             else begin
@@ -72,7 +72,7 @@ module CPU(
     aluUnit u_alu (
         .DATA1(ALU_IN_DATA1),
         .DATA2(ALU_IN_DATA2),
-        .SELECT(ALUOP),
+        .ALUOP(ALUOP),
         .RESULT(ALURESULT),
         .ZERO(ZERO_FLAG)
     );
