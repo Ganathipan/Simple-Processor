@@ -88,3 +88,36 @@ module shifterUnit (
         #4; // Delay for shifting
     end
 endmodule
+
+module aluUnit(
+    input [7:0] DATA1,        // 8-bit input DATA1
+    input [7:0] DATA2,        // 8-bit input DATA2
+    input [2:0] ALUOP,     // 3-bit selector to choose operation
+    output reg [7:0] RESULT,   // 8-bit output RESULT
+    output reg ZERO
+    );
+
+    wire [7:0] sum, andOut, orOut, fwdOut, mulOut, shiftOut;
+
+    fwdUnit     u0 (.RESULT(fwdOut)  , .DATA2(DATA2));
+    addUnit     u1 (.RESULT(sum)     , .DATA1(DATA1), .DATA2(DATA2));
+    andUnit     u3 (.RESULT(andOut)  , .DATA1(DATA1), .DATA2(DATA2));
+    orUnit      u4 (.RESULT(orOut)   , .DATA1(DATA1), .DATA2(DATA2));
+    mulUnit     u5 (.RESULT(mulOut)  , .DATA1(DATA1), .DATA2(DATA2));
+    shifterUnit u6 (.RESULT(shiftOut), .DATA1(DATA1), .DATA2(DATA2));
+    
+    always @(*) begin
+        case (ALUOP)
+            3'b000: RESULT = fwdOut;    
+            3'b001: RESULT = sum;      
+            3'b010: RESULT = andOut;  
+            3'b011: RESULT = orOut;
+            3'b100: RESULT = mulOut;
+            3'b101: RESULT = shiftOut;                
+            default: RESULT = 8'b0; 
+        endcase
+
+        // Sets the ZERO flag if the result is zero
+        ZERO = (sum == 0) ? 1'b1: 1'b0;  
+    end
+endmodule
