@@ -119,20 +119,16 @@ module aluUnit(
     end
 endmodule
 
-// registerFile.v - Register File module
-// This module implements a register file with read and write capabilities.
-// It has 8 registers, each 8 bits wide.
-
 module reg_file(
-    input [7:0] INDATA,             // Data to write
-    input [2:0] INADDRESS,          // Address of register to write
-    input [2:0] OUT1ADDRESS,        // Address of register to read (port 1)
-    input [2:0] OUT2ADDRESS,        // Address of register to read (port 2)
-    output reg [7:0] OUT1DATA,      // Data output from register (port 1)
-    output reg [7:0] OUT2DATA,      // Data output from register (port 2)
-    input CLK,                      // Clock signal
-    input RESET,                    // Reset signal (active high)
-    input  WRITE                    // Write enable signal
+    input [7:0] INDATA,             
+    input [2:0] INADDRESS,          
+    input [2:0] OUT1ADDRESS,        
+    input [2:0] OUT2ADDRESS,        
+    output reg [7:0] OUT1DATA,      
+    output reg [7:0] OUT2DATA,      
+    input CLK,                      
+    input RESET,                    
+    input  WRITE                    
     );
 
     reg [7:0] reg_array [0:7]; 
@@ -148,18 +144,16 @@ module reg_file(
         wire [7:0] r7 = reg_array[7];
 
     always @(*) begin
-        OUT1DATA <= #2 reg_array[OUT1ADDRESS];  // Output data from register reg1
-        OUT2DATA <= #2 reg_array[OUT2ADDRESS];  // Output data from register reg2
+        OUT1DATA <= #2 reg_array[OUT1ADDRESS];  
+        OUT2DATA <= #2 reg_array[OUT2ADDRESS];  
     end
 
-    // On write enable, write data to specified register on positive edge of Clock
     always @(posedge CLK) begin
         if(WRITE == 1'b1  &&  RESET == 1'b0) begin 
             reg_array[INADDRESS] <= #1 INDATA;
         end
     end
 
-    // On reset, clear all registers
     integer counter;             
     always @(posedge CLK) begin
         if(RESET == 1'b1) begin
@@ -271,7 +265,7 @@ module CPU(
 
     wire [1:0] BRANCH_CONTROL;
     wire JUMP_CONTROL;
-    wire ZERO_FLAG;              // to control the gates for beq instruction
+    wire ZERO_FLAG;        
     wire [31:0] PC_IN;
 
     ProgramCounter u_pc (
