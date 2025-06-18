@@ -74,7 +74,6 @@ module shifterUnit (
                 2'b11: RESULT = {RESULT[0], RESULT[7:1]};     // Rotate right (ror)
             endcase
         end
-        //#4; // Delay for shifting
         end 
         else begin
             RESULT = 8'B0;
