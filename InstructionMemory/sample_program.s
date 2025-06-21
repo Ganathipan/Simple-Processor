@@ -1,3 +1,12 @@
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
+// sample_program.s - Example assembly program
+// Purpose: Demonstrates the use of all supported instructions for the CO224 processor.
+// -----------------------------------------------------------------------------
+
 // Assembly example using all required instructions
 // The #number before each instruction indicates the instruction line number (address) in memory
 

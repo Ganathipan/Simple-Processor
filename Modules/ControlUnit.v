@@ -1,5 +1,11 @@
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
 // ControlUnit.v - Control Unit for the processor
-// This module decodes the instruction opcode and generates control signals for the datapath.
+// Purpose: Decodes the instruction opcode and generates control signals for the datapath, including ALU operation, register write, branching, and jump control.
+// -----------------------------------------------------------------------------
 
 module control_unit(
     input [7:0] OPCODE,                // 8-bit instruction opcode from instruction memory

@@ -1,3 +1,12 @@
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
+// CPU.v - Top-level CPU module
+// Purpose: Integrates all processor components (PC, control unit, register file, ALU, and datapath logic) to form a complete CPU capable of executing instructions.
+// -----------------------------------------------------------------------------
+
 // CPU.v - Top-level CPU module
 // This module integrates all processor components: PC, control unit, register file, ALU, and datapath logic.
 

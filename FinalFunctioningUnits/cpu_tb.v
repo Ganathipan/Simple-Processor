@@ -1,3 +1,8 @@
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// Description: Testbench for the CO224 Lab 5 Task 5 processor. This file simulates the CPU, loads instructions from memory, generates the clock and reset signals, and dumps waveforms for analysis. It is used to verify the correct operation of the processor and observe register/memory behavior during execution.
+
 module cpu_tb;
 
     reg CLK, RESET;
@@ -30,29 +35,19 @@ module cpu_tb;
 
     initial begin
         // Load instruction memory from file
-        $readmemb("/home/ganathipan/CO224_CA/VerilogHDL/lab5/task5/InstructionMemory/instr_mem.mem", instr_mem);
-
-        // Optional: Display initial memory (commented)
-        /*
-        $display("Instruction Memory Contents (First 32 Bytes):");
-        for (i = 0; i < 32; i = i + 1) begin
-            $display("addr[%0d] = %b", i, instr_mem[i]);
-        end
-        */
+        $readmemb("InstructionMemory/instr_mem.mem", instr_mem);
 
         // Initialize waveform dump
-        $dumpfile("cpu_wavedata.vcd");
+        $dumpfile("FinalFunctioningUnits/cpu_wavedata.vcd");
         $dumpvars(0, cpu_tb);
-        /*
-        $dumpvars(1, cpu_tb.mycpu.u_regfile.r0);
-        $dumpvars(1, cpu_tb.mycpu.u_regfile.r1);
-        $dumpvars(1, cpu_tb.mycpu.u_regfile.r2);
-        $dumpvars(1, cpu_tb.mycpu.u_regfile.r3);
-        $dumpvars(1, cpu_tb.mycpu.u_regfile.r4);
-        $dumpvars(1, cpu_tb.mycpu.u_regfile.r5);
-        $dumpvars(1, cpu_tb.mycpu.u_regfile.r6);
-        $dumpvars(1, cpu_tb.mycpu.u_regfile.r7);
-        */
+        $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[0]);
+        $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[1]);
+        $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[2]);
+        $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[3]);
+        $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[4]);
+        $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[5]);
+        $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[6]);
+        $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[7]);
 
         // Initialize signals
         CLK = 0;
@@ -70,5 +65,4 @@ module cpu_tb;
 
         #10 $finish;
     end
-
 endmodule

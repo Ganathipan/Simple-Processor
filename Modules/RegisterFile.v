@@ -1,5 +1,11 @@
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
 // RegisterFile.v - Register File module
-// This module implements a register file with read and write capabilities for 8 registers.
+// Purpose: Implements an 8-register file with read and write capabilities for the processor datapath.
+// -----------------------------------------------------------------------------
 
 module reg_file(
     input [7:0] INDATA,             // Data to write to register file
@@ -14,16 +20,6 @@ module reg_file(
     );
 
     reg [7:0] reg_array [0:7]; // 8 registers, 8 bits each
-
-    // Expose registers as wires for waveform dumping and debugging
-    wire [7:0] r0 = reg_array[0]; // Register 0
-    wire [7:0] r1 = reg_array[1]; // Register 1
-    wire [7:0] r2 = reg_array[2]; // Register 2
-    wire [7:0] r3 = reg_array[3]; // Register 3
-    wire [7:0] r4 = reg_array[4]; // Register 4
-    wire [7:0] r5 = reg_array[5]; // Register 5
-    wire [7:0] r6 = reg_array[6]; // Register 6
-    wire [7:0] r7 = reg_array[7]; // Register 7
 
     // Combinational read: output data from selected registers
     always @(*) begin

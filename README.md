@@ -1,3 +1,13 @@
+```markdown
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
+// README.md - Project documentation and usage guide
+// Purpose: Explains the project structure, file purposes, and step-by-step instructions for compiling, simulating, and testing the processor and its modules.
+// -----------------------------------------------------------------------------
+
 # CO224 Lab 5 - Task 5 Project Structure and Usage Guide
 
 ## Overview
@@ -133,7 +143,7 @@ vvp processor_tb
    cd ../FinalFunctioningUnits
    iverilog -o processor_tb processor.v processor_tb.v
    vvp processor_tb
-   gtkwave processor_tb.vcd &
+   gtkwave processor_tb.vcd
    ```
 
 ---

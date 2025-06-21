@@ -1,5 +1,11 @@
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
 // ProgramCounter.v - Program Counter and PC Incrementer modules
-// These modules manage the instruction address and branching logic for the processor.
+// Purpose: Manages the instruction address and branching logic for the processor, including sequential and branch/jump address calculation.
+// -----------------------------------------------------------------------------
 
 // Program Counter: holds the current instruction address, updates on clock or reset.
 module ProgramCounter(

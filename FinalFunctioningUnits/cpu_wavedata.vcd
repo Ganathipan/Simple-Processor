@@ -1,5 +1,5 @@
 $date
-	Sun Jun 22 00:29:16 2025
+	Sun Jun 22 01:33:26 2025
 $end
 $version
 	Icarus Verilog
@@ -115,17 +115,65 @@ $var wire 3 d OUT1ADDRESS [2:0] $end
 $var wire 3 e OUT2ADDRESS [2:0] $end
 $var wire 1 $ RESET $end
 $var wire 1 ) WRITE $end
-$var wire 8 f r0 [7:0] $end
-$var wire 8 g r1 [7:0] $end
-$var wire 8 h r2 [7:0] $end
-$var wire 8 i r3 [7:0] $end
-$var wire 8 j r4 [7:0] $end
-$var wire 8 k r5 [7:0] $end
-$var wire 8 l r6 [7:0] $end
-$var wire 8 m r7 [7:0] $end
-$var reg 8 n OUT1DATA [7:0] $end
-$var reg 8 o OUT2DATA [7:0] $end
-$var integer 32 p counter [31:0] $end
+$var reg 8 f OUT1DATA [7:0] $end
+$var reg 8 g OUT2DATA [7:0] $end
+$var integer 32 h counter [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 i \reg_array[0] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 j \reg_array[1] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 k \reg_array[2] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 l \reg_array[3] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 m \reg_array[4] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 n \reg_array[5] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 o \reg_array[6] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 p \reg_array[7] [7:0] $end
 $upscope $end
 $upscope $end
 $upscope $end
@@ -263,17 +311,17 @@ b0 B
 #5
 b100 a
 #6
-b1000 p
+b1000 h
 1"
 #7
+b0 p
+b0 o
+b0 n
 b0 m
 b0 l
 b0 k
 b0 j
 b0 i
-b0 h
-b0 g
-b0 f
 #9
 b1000 Q
 b0 P
@@ -285,9 +333,9 @@ b0 I
 b0 L
 b0 R
 b0 -
-b0 o
+b0 g
 b0 .
-b0 n
+b0 f
 #10
 b0 9
 b0 K
@@ -306,6 +354,7 @@ b100 !
 b100 *
 b100 [
 b100 ^
+b0 i
 #20
 b1000 +
 b1000 Z
@@ -350,7 +399,7 @@ b1000 !
 b1000 *
 b1000 [
 b1000 ^
-b11 g
+b11 j
 #32
 b1100 +
 b1100 Z
@@ -383,7 +432,7 @@ b1 B
 #35
 b10100 a
 b11 -
-b11 o
+b11 g
 b1 7
 b1 E
 #36
@@ -396,7 +445,7 @@ b1100 !
 b1100 *
 b1100 [
 b1100 ^
-b1 h
+b1 k
 #44
 b10000 +
 b10000 Z
@@ -429,7 +478,7 @@ b0 B
 #47
 b11100 a
 b0 -
-b0 o
+b0 g
 1'
 b0 7
 b0 E
@@ -443,6 +492,7 @@ b10000 !
 b10000 *
 b10000 [
 b10000 ^
+b0 l
 #56
 b10100 +
 b10100 Z
@@ -487,7 +537,7 @@ b10100 !
 b10100 *
 b10100 [
 b10100 ^
-b1111 l
+b1111 o
 #68
 b11000 +
 b11000 Z
@@ -535,7 +585,7 @@ b1 M
 b1 S
 b100100 a
 b1 -
-b1 o
+b1 g
 1'
 b0 1
 b0 @
@@ -563,7 +613,7 @@ b11000 !
 b11000 *
 b11000 [
 b11000 ^
-b1 i
+b1 l
 #80
 b11100 +
 b11100 Z
@@ -589,7 +639,7 @@ b1 R
 b1000001100000010000001001 #
 b1000001100000010000001001 &
 b1 .
-b1 n
+b1 f
 #82
 b1 V
 0U
@@ -624,9 +674,9 @@ b1111 L
 b1111 R
 b101100 a
 b11 -
-b11 o
+b11 g
 b1111 .
-b1111 n
+b1111 f
 b10 7
 b10 E
 #84
@@ -644,7 +694,7 @@ b11100 !
 b11100 *
 b11100 [
 b11100 ^
-b11110 j
+b11110 m
 #92
 b100000 +
 b100000 Z
@@ -692,7 +742,7 @@ b100000 !
 b100000 *
 b100000 [
 b100000 ^
-b111 k
+b111 n
 #104
 b100100 +
 b100100 Z
@@ -737,7 +787,7 @@ b100100 !
 b100100 *
 b100100 [
 b100100 ^
-b111 m
+b111 p
 #116
 b101000 +
 b101000 Z
@@ -785,7 +835,7 @@ b101000 !
 b101000 *
 b101000 [
 b101000 ^
-b10000111 l
+b10000111 o
 #128
 b101100 +
 b101100 Z
@@ -827,7 +877,7 @@ b10000111 R
 b10000000010000000100000011 #
 b10000000010000000100000011 &
 b10000111 .
-b10000111 n
+b10000111 f
 #130
 b0 8
 b0 T
@@ -866,9 +916,9 @@ b11111101 M
 b11111101 S
 b110000 a
 b1 -
-b1 o
+b1 g
 b11 .
-b11 n
+b11 f
 b10001001 1
 b10001001 @
 b10001001 c
@@ -920,7 +970,7 @@ b101100 !
 b101100 *
 b101100 [
 b101100 ^
-b10 g
+b10 j
 #140
 b110000 +
 b110000 Z
@@ -947,7 +997,7 @@ b10 R
 b11111100100001010 #
 b11111100100001010 &
 b10 .
-b10 n
+b10 f
 #142
 b11111111 1
 b11111111 @
@@ -967,7 +1017,7 @@ b10100 Z
 b10100 `
 b10100 a
 b0 -
-b0 o
+b0 g
 b1 7
 b1 E
 #144
@@ -1052,9 +1102,9 @@ b1 L
 b1 R
 b100100 a
 b1 -
-b1 o
+b1 g
 b1 .
-b1 n
+b1 f
 #156
 b1 <
 b1 H
@@ -1071,7 +1121,7 @@ b11000 !
 b11000 *
 b11000 [
 b11000 ^
-b10 i
+b10 l
 #164
 b11100 +
 b11100 Z
@@ -1097,7 +1147,7 @@ b10 R
 b1000001100000010000001001 #
 b1000001100000010000001001 &
 b10 .
-b10 n
+b10 f
 #166
 b1 V
 0U
@@ -1135,9 +1185,9 @@ b10000111 L
 b10000111 R
 b101100 a
 b10 -
-b10 o
+b10 g
 b10000111 .
-b10000111 n
+b10000111 f
 b11 7
 b11 E
 #168
@@ -1157,7 +1207,7 @@ b11100 !
 b11100 *
 b11100 [
 b11100 ^
-b1110 j
+b1110 m
 #176
 b100000 +
 b100000 Z
@@ -1205,7 +1255,7 @@ b100000 !
 b100000 *
 b100000 [
 b100000 ^
-b1000011 k
+b1000011 n
 #188
 b100100 +
 b100100 Z
@@ -1253,7 +1303,7 @@ b100100 !
 b100100 *
 b100100 [
 b100100 ^
-b11000011 m
+b11000011 p
 #200
 b101000 +
 b101000 Z
@@ -1298,7 +1348,7 @@ b101000 !
 b101000 *
 b101000 [
 b101000 ^
-b11000011 l
+b11000011 o
 #212
 b101100 +
 b101100 Z
@@ -1339,7 +1389,7 @@ b11000011 R
 b10000000010000000100000011 #
 b10000000010000000100000011 &
 b11000011 .
-b11000011 n
+b11000011 f
 #214
 b0 8
 b0 T
@@ -1378,9 +1428,9 @@ b11111110 M
 b11111110 S
 b110000 a
 b1 -
-b1 o
+b1 g
 b10 .
-b10 n
+b10 f
 b11000101 1
 b11000101 @
 b11000101 c
@@ -1430,7 +1480,7 @@ b101100 !
 b101100 *
 b101100 [
 b101100 ^
-b1 g
+b1 j
 #224
 b110000 +
 b110000 Z
@@ -1457,7 +1507,7 @@ b1 R
 b11111100100001010 #
 b11111100100001010 &
 b1 .
-b1 n
+b1 f
 #226
 b11111111 1
 b11111111 @
@@ -1474,7 +1524,7 @@ b1 H
 #227
 b10100 a
 b0 -
-b0 o
+b0 g
 b110000 +
 b110000 Z
 b110000 `
@@ -1567,9 +1617,9 @@ b10 L
 b10 R
 b100100 a
 b1 -
-b1 o
+b1 g
 b10 .
-b10 n
+b10 f
 #240
 b11 9
 b11 K
@@ -1590,7 +1640,7 @@ b11000 !
 b11000 *
 b11000 [
 b11000 ^
-b11 i
+b11 l
 #248
 b11100 +
 b11100 Z
@@ -1616,7 +1666,7 @@ b11 R
 b1000001100000010000001001 #
 b1000001100000010000001001 &
 b11 .
-b11 n
+b11 f
 #250
 b1 V
 0U
@@ -1652,7 +1702,7 @@ b11000011 L
 b11000011 R
 b101100 a
 b11000011 .
-b11000011 n
+b11000011 f
 b100 7
 b100 E
 #252
@@ -1670,7 +1720,7 @@ b11100 !
 b11100 *
 b11100 [
 b11100 ^
-b10000110 j
+b10000110 m
 #260
 b100000 +
 b100000 Z
@@ -1718,7 +1768,7 @@ b100000 !
 b100000 *
 b100000 [
 b100000 ^
-b1100001 k
+b1100001 n
 #272
 b100100 +
 b100100 Z
@@ -1766,7 +1816,7 @@ b100100 !
 b100100 *
 b100100 [
 b100100 ^
-b11100001 m
+b11100001 p
 #284
 b101000 +
 b101000 Z
@@ -1811,7 +1861,7 @@ b101000 !
 b101000 *
 b101000 [
 b101000 ^
-b11100001 l
+b11100001 o
 #296
 b101100 +
 b101100 Z
@@ -1852,7 +1902,7 @@ b11100001 R
 b10000000010000000100000011 #
 b10000000010000000100000011 &
 b11100001 .
-b11100001 n
+b11100001 f
 #298
 b0 8
 b0 T
@@ -1891,7 +1941,7 @@ b11111111 M
 b11111111 S
 b110000 a
 b1 .
-b1 n
+b1 f
 b11100011 1
 b11100011 @
 b11100011 c
@@ -1920,7 +1970,7 @@ b101100 !
 b101100 *
 b101100 [
 b101100 ^
-b0 g
+b0 j
 #308
 b110000 +
 b110000 Z
@@ -1947,7 +1997,7 @@ b0 R
 b11111100100001010 #
 b11111100100001010 &
 b0 .
-b0 n
+b0 f
 #310
 b11111111 1
 b11111111 @
@@ -1961,7 +2011,7 @@ b0 H
 #311
 b10100 a
 b0 -
-b0 o
+b0 g
 b10100 +
 b10100 Z
 b10100 `
@@ -2074,9 +2124,9 @@ b10000110 L
 b10000110 R
 b1011000 a
 b11 -
-b11 o
+b11 g
 b10000110 .
-b10000110 n
+b10000110 f
 #336
 b10000110 9
 b10000110 K
@@ -2120,7 +2170,7 @@ b1000100 !
 b1000100 *
 b1000100 [
 b1000100 ^
-b10000011 k
+b10000011 n
 #344
 b1001000 +
 b1001000 Z
@@ -2184,9 +2234,9 @@ b110 8
 b110 T
 b1100100 a
 b0 -
-b0 o
+b0 g
 b10000011 .
-b10000011 n
+b10000011 f
 b1 4
 b1 6
 b1 A
@@ -2214,7 +2264,7 @@ b1001000 !
 b1001000 *
 b1001000 [
 b1001000 ^
-b110 m
+b110 p
 #356
 b1001100 +
 b1001100 Z
@@ -2299,9 +2349,9 @@ bx L
 bx R
 bx a
 bx -
-bx o
+bx g
 bx .
-bx n
+bx f
 b10000011 7
 b10000011 E
 #360

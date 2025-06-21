@@ -1,3 +1,8 @@
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// Description: Top-level processor and all submodules for CO224 Lab 5 Task 5. This file contains the Verilog implementation of the CPU datapath, ALU, control unit, register file, shifter, multiplier, and supporting modules. Each module is coded and commented for clarity and modularity. The design supports simulation and integration with instruction memory for full processor testing.
+
 module fwdUnit (
     input [7:0] DATA2,
     output [7:0] RESULT);
@@ -132,16 +137,6 @@ module reg_file(
     );
 
     reg [7:0] reg_array [0:7]; 
-
-    // Expose registers as wires for waveform dumping
-        wire [7:0] r0 = reg_array[0];
-        wire [7:0] r1 = reg_array[1];
-        wire [7:0] r2 = reg_array[2];
-        wire [7:0] r3 = reg_array[3];
-        wire [7:0] r4 = reg_array[4];
-        wire [7:0] r5 = reg_array[5];
-        wire [7:0] r6 = reg_array[6];
-        wire [7:0] r7 = reg_array[7];
 
     always @(*) begin
         OUT1DATA <= #2 reg_array[OUT1ADDRESS];  

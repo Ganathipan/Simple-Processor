@@ -1,3 +1,12 @@
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2024-06-09
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
+// ALU.v - Arithmetic Logic Unit and related modules
+// Purpose: Implements the ALU and its submodules (forward, add, and, or, mul, shifter) for the processor. Provides all arithmetic and logic operations required by the datapath.
+// -----------------------------------------------------------------------------
+
 // ALU.v - Arithmetic Logic Unit and related modules
 // This file contains the implementation of the ALU and its submodules for the processor.
 
