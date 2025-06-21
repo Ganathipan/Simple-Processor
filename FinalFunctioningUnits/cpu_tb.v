@@ -30,7 +30,7 @@ module cpu_tb;
 
     initial begin
         // Load instruction memory from file
-        $readmemb("instr_mem.mem", instr_mem);
+        $readmemb("/home/ganathipan/CO224_CA/VerilogHDL/lab5/task5/InstructionMemory/instr_mem.mem", instr_mem);
 
         // Optional: Display initial memory (commented)
         /*
