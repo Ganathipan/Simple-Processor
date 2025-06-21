@@ -1,14 +1,10 @@
-```markdown
-// -----------------------------------------------------------------------------
-// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
-// Date: 2024-06-09
-// Institution: Computer Engineering Department, Faculty of Engineering, UOP
-// -----------------------------------------------------------------------------
-// README.md - Project documentation and usage guide
-// Purpose: Explains the project structure, file purposes, and step-by-step instructions for compiling, simulating, and testing the processor and its modules.
-// -----------------------------------------------------------------------------
-
 # CO224 Lab 5 - Task 5 Project Structure and Usage Guide
+
+**Authors:** S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]  
+**Date:** 2024-06-09  
+**Institution:** Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
+
+---
 
 ## Overview
 This project implements a modular processor in Verilog HDL for CO224 Lab 5, Task 5. The design is structured to separate hardware-level modules, processor components, and instruction memory, supporting both unit and system-level testing. The organization is intended to facilitate learning, debugging, extensibility, and clear demonstration of digital design principles.
