@@ -7,7 +7,7 @@
 // README.md - Project documentation and usage guide
 // Purpose: Explains the project structure, file purposes, and step-by-step instructions for compiling, simulating, and testing the processor and its modules.
 // -----------------------------------------------------------------------------
-
+```
 # CO224 Lab 5 - Task 5 Project Structure and Usage Guide
 
 ## Overview
