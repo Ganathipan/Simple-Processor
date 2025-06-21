@@ -37,6 +37,13 @@ Generated output file	: <your_assembly_file_name>.machine
 #define LINE_SIZE 512
 
 
+void print8bits(FILE *fo, unsigned char val) {
+    for (int i = 7; i >= 0; i--) {
+        fputc((val & (1 << i)) ? '1' : '0', fo);
+    }
+}
+
+
 int main( int argc, char *argv[] )
 {
 	/* OP-CODE DEIFINITIONS
@@ -51,9 +58,13 @@ int main( int argc, char *argv[] )
 	char *op_j		= "00000110";
 	char *op_beq	= "00000111";
     
-	char *op_lwd 	= "00001000";
-	char *op_lwi 	= "00001001";
-	char *op_swd 	= "00001010";
+	char *op_mul   = "00001000";
+	char *op_shift = "00001001";
+	char *op_bne   = "00001010";
+    
+	char *op_lwd 	= "00001011";
+	char *op_lwi 	= "00001100";
+	char *op_swd 	= "00001101";
 	/************************************************************************/
 	
 	const char delim[] = " ";
@@ -68,7 +79,7 @@ int main( int argc, char *argv[] )
 	strcat(out_file,".machine");
 
  	if ((fi = fopen(argv[1],"r")) == NULL){
-		printf("Err0r: Cannot open source file!\n");
+		printf("Error: Cannot open source file!\n");
 		exit(1);
 	}
 
@@ -80,15 +91,30 @@ int main( int argc, char *argv[] )
 
  	while(fgets(line, LINE_SIZE, fi)!=NULL) // Read a line from the input .s file
 	{
-		/* Preprocess the line and insert "X" for ignored fields where needed
-		*************************************************************************/
 		char pline[LINE_SIZE]="";
 		char tline[LINE_SIZE];
-		strcpy(tline,line);		
-		in_token = strtok(tline, delim);// Read the first token	(if this is an instruction, first token is the operation)	
+		// Remove inline comments
+		char *comment_ptr = strstr(line, "//");
+		if (comment_ptr != NULL) {
+			*comment_ptr = '\0';
+		}
+		// Trim leading and trailing whitespace after removing comment
+		char *trim = line;
+		while (*trim && isspace(*trim)) trim++;
+		// Remove trailing whitespace
+		char *end = trim + strlen(trim) - 1;
+		while (end >= trim && isspace(*end)) {
+			*end = '\0';
+			end--;
+		}
+		if (*trim == '\0') continue;
+		line_count++; // Only increment for non-empty, non-comment lines
+		strcpy(tline, trim); // Use fully trimmed line for tokenizing
+		in_token = strtok(tline, delim); // Only tokenize if not empty
+		if (in_token == NULL) continue;
 		// Only for valid instructions with two or three tokens (ignored bits 15-8 and/or bits 7-0 fields)
 		if(strcasecmp(in_token,"mov")==0 || strcasecmp(in_token,"loadi")==0 || strcasecmp(in_token,"lwd")==0 || strcasecmp(in_token,"lwi")==0 || 
-		strcasecmp(in_token,"swd")==0 || strcasecmp(in_token,"j")==0) 
+		strcasecmp(in_token,"swd")==0 || strcasecmp(in_token,"j")==0 || strcasecmp(in_token,"mul")==0 || strcasecmp(in_token,"shift")==0 || strcasecmp(in_token,"bne")==0 || strcasecmp(in_token,"sll")==0 || strcasecmp(in_token,"srl")==0 || strcasecmp(in_token,"sra")==0 || strcasecmp(in_token,"ror")==0) 
 		{
 			int j = (strcasecmp(in_token,"j")==0)?1:0; //Flag if this is a 'j' (j is the only instruction ignoring bits 7-0)
             int store = (strcasecmp(in_token,"swd")==0)?1:0; //Flag if this is a store instruction
@@ -149,9 +175,32 @@ int main( int argc, char *argv[] )
 			else if(strcasecmp(in_token,"or")==0) strcpy(out_token, op_or);
 			else if(strcasecmp(in_token,"j")==0) strcpy(out_token, op_j);
 			else if(strcasecmp(in_token,"beq")==0) strcpy(out_token, op_beq);
-			else if(strcasecmp(in_token,"lwd")==0) strcpy(out_token, op_lwd);
-			else if(strcasecmp(in_token,"lwi")==0) strcpy(out_token, op_lwi);
-			else if(strcasecmp(in_token,"swd")==0) strcpy(out_token, op_swd);
+			else if(strcasecmp(in_token,"mul")==0) strcpy(out_token, op_mul);
+			else if(strcasecmp(in_token,"bne")==0) strcpy(out_token, op_bne);
+			else if(strcasecmp(in_token,"sll")==0 || strcasecmp(in_token,"srl")==0 || strcasecmp(in_token,"sra")==0 || strcasecmp(in_token,"ror")==0) {
+				// Parse shift instruction: sll/srl/sra/ror dest, src, #amount
+				int shift_type = 0;
+				if(strcasecmp(in_token,"sll")==0) shift_type = 0;
+				else if(strcasecmp(in_token,"srl")==0) shift_type = 1;
+				else if(strcasecmp(in_token,"sra")==0) shift_type = 2;
+				else if(strcasecmp(in_token,"ror")==0) shift_type = 3;
+				in_token = strtok(NULL, delim); // dest
+				int dest = atoi(in_token+1); // skip 'r'
+				in_token = strtok(NULL, delim); // src
+				int src = atoi(in_token+1);
+				in_token = strtok(NULL, delim); // #amount
+				int amount = 0;
+				if(in_token[0] == '#') amount = atoi(in_token+1);
+				else amount = atoi(in_token);
+				int imm = (shift_type << 4) | (amount & 0xF);
+				// Write as: opcode, dest, src, imm in binary
+				for(int i=0;i<8;i++) fputc(op_shift[i], fo);
+				print8bits(fo, dest);
+				print8bits(fo, src);
+				print8bits(fo, imm);
+				fputc('\n', fo);
+				break;
+			}
 
 			// Encoding register numbers
 			else if(strcmp(in_token,"0")==0 || strcmp(in_token,"0\n")==0) strcpy(out_token, "00000000");

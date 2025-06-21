@@ -14,8 +14,8 @@ module cpu_tb;
         .RESET(RESET)
     );
 
-    // Clock generation (period = 8 time units)
-    always #4 CLK = ~CLK;
+    // Clock generation (period = 10 time units)
+    always #6 CLK = ~CLK;
 
     // Instruction fetch on PC change
     always @(PC) begin
@@ -26,8 +26,7 @@ module cpu_tb;
             instr_mem[PC + 2],
             instr_mem[PC + 3]
         };
-        $display("->    Cycle %0d: PC = %0d, Instruction = %b", i, PC, INSTRUCTION);
-    end
+    end        
 
     initial begin
         // Load instruction memory from file
@@ -61,10 +60,12 @@ module cpu_tb;
         #8; // Wait 8 time units for RESET to propagate
         @(posedge CLK);  // Sync with clock
         RESET = 0;
+        $display("->    Cycle %0d: PC = %0d, Instruction = %b %b %b %b", i, PC, INSTRUCTION[31:24], INSTRUCTION[23:16], INSTRUCTION[15:8], INSTRUCTION[7:0]);
 
-        // Run for 4 cycles
-        for (i = 0; i < 20; i = i + 1) begin
+        // Run for 20 cycles and display PC and instruction at each cycle
+        for (i = 0; i < 30; i = i + 1) begin
             @(posedge CLK);
+            $display("->    Cycle %0d: PC = %0d, Instruction = %b %b %b %b", i, PC, INSTRUCTION[31:24], INSTRUCTION[23:16], INSTRUCTION[15:8], INSTRUCTION[7:0]);
         end
 
         #10 $finish;
