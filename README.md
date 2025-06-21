@@ -62,18 +62,18 @@ This project implements a modular processor in Verilog HDL for CO224 Lab 5, Task
 
 ### 1. Navigate to the Project Directory
 ```sh
-cd ~/CO224_CA/VerilogHDL/lab5/task5
+/task5$ # You are now in project directory
 ```
 
 ### 2. Compile the Assembler
 ```sh
-gcc CO224Assembler_Modified.c -o CO224Assembler
+/task5$ gcc CO224Assembler_Modified.c -o CO224Assembler
 ```
 - This creates an executable `CO224Assembler` for converting assembly to machine code.
 
 ### 3. Assemble an Assembly Program
 ```sh
-./CO224Assembler sample_program.s
+/task5$ ./CO224Assembler sample_program.s
 ```
 - This generates `sample_program.s.machine` in the same directory.
 - You can write your own `.s` files and assemble them similarly.
@@ -81,24 +81,21 @@ gcc CO224Assembler_Modified.c -o CO224Assembler
 ### 4. Compile and Simulate Verilog Modules
 - **Hardware-level modules (shifter, multiplier):**
 ```sh
-cd ../GateLevelModules
-iverilog -o shifter_tb shifter.v shifter_tb.v
-vvp shifter_tb
-iverilog -o multiplier_tb multiplier.v multiplier_tb.v
-vvp multiplier_tb
+/task5$ iverilog -o GateLevelModules/shifter_tb GateLevelModules/shifter.v GateLevelModules/shifter_tb.v
+/task5$ vvp GateLevelModules/shifter_tb
+/task5$ iverilog -o GateLevelModules/multiplier_tb GateLevelModules/multiplier.v GateLevelModules/multiplier_tb.v
+/task5$ vvp GateLevelModules/multiplier_tb
 ```
 - **Processor modules (ALU, control unit, etc.):**
 ```sh
-cd ../Modules
-iverilog -o alu_tb alu.v alu_tb.v
-vvp alu_tb
+/task5$ iverilog -o Modules/alu_tb Modules/alu.v Modules/alu_tb.v
+/task5$ vvp Modules/alu_tb
 # Repeat for other modules as needed
 ```
 - **Final processor and waveform viewing:**
 ```sh
-cd ../FinalFunctioningUnits
-iverilog -o processor_tb processor.v processor_tb.v
-vvp processor_tb
+/task5$ iverilog -o FinalFunctioningUnits/processor_tb FinalFunctioningUnits/processor.v FinalFunctioningUnits/processor_tb.v
+/task5$ vvp FinalFunctioningUnits/processor_tb
 # Use gtkwave to view the waveform if needed
 ```
 
@@ -119,29 +116,25 @@ vvp processor_tb
 1. **Write or edit an assembly program** in `task5/` or `InstructionMemory/` (e.g., `sample_program.s`).
 2. **Assemble the program:**
    ```sh
-   cd ~/CO224_CA/VerilogHDL/lab5/task5
-   gcc CO224Assembler_Modified.c -o CO224Assembler
-   ./CO224Assembler sample_program.s
+   /task5$ gcc CO224Assembler_Modified.c -o CO224Assembler
+   /task5$ ./CO224Assembler sample_program.s
    ```
 3. **Copy the `.machine` file** to `InstructionMemory/` if needed.
 4. **Simulate hardware modules** (e.g., shifter, multiplier) in `GateLevelModules/`:
    ```sh
-   cd ../GateLevelModules
-   iverilog -o shifter_tb shifter.v shifter_tb.v
-   vvp shifter_tb
+   /task5$ iverilog -o GateLevelModules/shifter_tb GateLevelModules/shifter.v GateLevelModules/shifter_tb.v
+   /task5$ vvp GateLevelModules/shifter_tb
    ```
 5. **Simulate processor modules** in `Modules/`:
    ```sh
-   cd ../Modules
-   iverilog -o alu_tb alu.v alu_tb.v
-   vvp alu_tb
+   /task5$ iverilog -o Modules/alu_tb Modules/alu.v Modules/alu_tb.v
+   /task5$ vvp Modules/alu_tb
    ```
 6. **Run the full processor simulation** in `FinalFunctioningUnits/`:
    ```sh
-   cd ../FinalFunctioningUnits
-   iverilog -o processor_tb processor.v processor_tb.v
-   vvp processor_tb
-   gtkwave processor_tb.vcd
+   /task5$ iverilog -o FinalFunctioningUnits/processor_tb FinalFunctioningUnits/processor.v FinalFunctioningUnits/processor_tb.v
+   /task5$ vvp FinalFunctioningUnits/processor_tb
+   /task5$ gtkwave FinalFunctioningUnits/processor_tb.vcd
    ```
 
 ---
