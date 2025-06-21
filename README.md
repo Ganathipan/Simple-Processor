@@ -4,7 +4,7 @@
 **Date:** 2024-06-09  
 **Institution:** Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
   
-**GitHub Repository:** [https://github.com/Ganathipan/Simple-Processor/tree/main] (GIT Repo Link)
+**GitHub Repository:** https://github.com/Ganathipan/Simple-Processor/tree/main
 
 ---
 
