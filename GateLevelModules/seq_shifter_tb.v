@@ -1,3 +1,7 @@
+// Authors: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2025-06-22
+// Institution: Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
+
 module gate_level_seq_shifter_tb;
 
     // Inputs
@@ -51,6 +55,8 @@ module gate_level_seq_shifter_tb;
     // Test sequence
     initial begin
         $display("Starting gate-level universal shifter testbench...");
+        $dumpfile("GateLevelModues/seq_shifter.vcd");  // VCD output file
+        $dumpvars(0, gate_level_seq_shifter_tb);  // Dump all signals recursively
         clk = 0;
         rst = 1;
         start = 0;

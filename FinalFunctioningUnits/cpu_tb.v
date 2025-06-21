@@ -1,5 +1,5 @@
 // Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
-// Date: 2024-06-09
+// Date: 2025-06-22
 // Institution: Computer Engineering Department, Faculty of Engineering, UOP
 // Description: Testbench for the CO224 Lab 5 Task 5 processor. This file simulates the CPU, loads instructions from memory, generates the clock and reset signals, and dumps waveforms for analysis. It is used to verify the correct operation of the processor and observe register/memory behavior during execution.
 

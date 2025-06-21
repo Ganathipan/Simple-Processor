@@ -1,3 +1,7 @@
+// Authors: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2025-06-22
+// Institution: Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
+
 module gate_level_seq_shifter (
     input clk,
     input rst,                // async reset

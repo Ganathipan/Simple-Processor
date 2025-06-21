@@ -1,7 +1,7 @@
 # CO224 Lab 5 - Task 5 Project Structure and Usage Guide
 
 **Authors:** S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]  
-**Date:** 2024-06-09  
+**Date:** 2025-06-22  
 **Institution:** Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
   
 **GitHub Repository:** https://github.com/Ganathipan/Simple-Processor/tree/main

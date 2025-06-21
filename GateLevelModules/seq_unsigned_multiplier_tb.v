@@ -1,3 +1,7 @@
+// Authors: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2025-06-22
+// Institution: Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
+
 module seq_unsigned_multiplier_tb;
 
     reg clk;
@@ -23,7 +27,7 @@ module seq_unsigned_multiplier_tb;
 
     initial begin
         // Waveform dump
-        $dumpfile("seq_unsigned_multiplier.vcd");  // VCD output file
+        $dumpfile("GateLevelModues/seq_unsigned_multiplier.vcd");  // VCD output file
         $dumpvars(0, seq_unsigned_multiplier_tb);  // Dump all signals recursively
 
         // Initial values
