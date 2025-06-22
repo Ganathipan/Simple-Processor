@@ -179,9 +179,9 @@ module control_unit(
     localparam OP_J     = 8'b00000110;
     localparam OP_BEQ   = 8'b00000111;
     
-    localparam OP_MUL   = 8'b00001000;
-    localparam OP_SHIFT = 8'b00001001;
-    localparam OP_BNE   = 8'b00001010;
+    localparam OP_MUL   = 8'b00001100;
+    localparam OP_SHIFT = 8'b00001101;
+    localparam OP_BNE   = 8'b00001110;
 
     always @(OPCODE) begin 
         ALUOP <= #1 (OPCODE == OP_ADD)   ? 3'b001 :

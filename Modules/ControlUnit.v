@@ -26,9 +26,9 @@ module control_unit(
     localparam OP_OR    = 8'b00000101; // Bitwise OR
     localparam OP_J     = 8'b00000110; // Unconditional jump
     localparam OP_BEQ   = 8'b00000111; // Branch if equal
-    localparam OP_MUL   = 8'b00001000; // Multiply
-    localparam OP_SHIFT = 8'b00001001; // Shift/rotate
-    localparam OP_BNE   = 8'b00001010; // Branch if not equal
+    localparam OP_MUL   = 8'b00001100; // Multiply
+    localparam OP_SHIFT = 8'b00001101; // Shift/rotate
+    localparam OP_BNE   = 8'b00001110; // Branch if not equal
 
     // Combinational logic to decode opcode and set control signals for datapath
     always @(OPCODE) begin 
