@@ -1,0 +1,31 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Wed Jun 25 03:15:35 2025
+[*]
+[dumpfile] "/home/ganathipan/CO224_CA/VerilogHDL/lab6/cpu_wavedata.vcd"
+[dumpfile_mtime] "Wed Jun 25 03:15:12 2025"
+[dumpfile_size] 13362
+[savefile] "/home/ganathipan/CO224_CA/VerilogHDL/lab6/lab06.gtkw"
+[timestart] 0
+[size] 1317 600
+[pos] -1 -1
+*-5.635032 36 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] cpu_tb.
+[treeopen] cpu_tb.mycpu.
+[sst_width] 214
+[signals_width] 198
+[sst_expanded] 1
+[sst_vpaned_height] 152
+@28
+cpu_tb.mycpu.CLK
+cpu_tb.mycpu.u_data_mem.readaccess
+@29
+cpu_tb.mycpu.u_data_mem.writeaccess
+@22
+cpu_tb.mycpu.u_regfile.\reg_array[1][7:0]
+cpu_tb.mycpu.u_regfile.\reg_array[2][7:0]
+cpu_tb.mycpu.u_regfile.\reg_array[3][7:0]
+cpu_tb.mycpu.u_data_mem.\memory_array[4][7:0]
+cpu_tb.mycpu.u_data_mem.\memory_array[5][7:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,8 @@
+loadi r1, 0x07
+loadi r2, 0x08
+loadi r3, 0x05
+lwi r2, 0x04
+swi r1, 0x04
+loadi r1, 0x10
+lwd r1, r3
+swd r2, r3
