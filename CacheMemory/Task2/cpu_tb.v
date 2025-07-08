@@ -44,8 +44,8 @@ module cpu_tb;
         for (i = 0; i < 8; i = i + 1) 
             $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[i]);
 
-        for (i = 0; i < 10; i = i+1)
-            $dumpvars(2, cpu_tb.mycpu.u_data_mem.memory_array[i]);
+        for (i = 0; i < 8; i = i+1)
+            $dumpvars(2, cpu_tb.mycpu.u_data_cache.data_blocks[i]);
 
         // Initialize signals
         CLK = 0;

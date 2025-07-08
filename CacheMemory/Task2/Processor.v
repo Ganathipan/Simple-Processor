@@ -270,10 +270,10 @@ module CPU(
     output wire [31:0] PC_OUT,
 
     // Memory interface
-    output reg READ_DATA_MEM2CAC,
-    output reg WRITE_DATA_MEM2CAC,
-    output reg [5:0] MEM_ADDRESS_MEM2CAC,
-    output reg [31:0] WRITE_DATA_MEM2CAC,
+    output wire READ_DATA_MEM2CAC,
+    output wire WRITE_DATA_MEM2CAC,
+    output wire [5:0] MEM_ADDRESS_MEM2CAC,
+    output wire [31:0] OUTDATA_MEM2CAC,
     input [31:0] INDATA_MEM2CAC,
     input BUSYWAIT_MEM2CAC
     );
@@ -374,7 +374,7 @@ module CPU(
         .mem_read(READ_DATA_MEM2CAC),
         .mem_write(WRITE_DATA_MEM2CAC),
         .mem_address(MEM_ADDRESS_MEM2CAC),
-        .mem_writedata(WRITE_DATA__MEM2CAC),
+        .mem_writedata(OUTDATA_MEM2CAC),
         .mem_readdata(INDATA_MEM2CAC),
         .mem_busywait(BUSYWAIT_MEM2CAC)
     );
@@ -388,7 +388,8 @@ module system(
 
     wire READ_DATA_MEM2CAC, WRITE_DATA_MEM2CAC, BUSYWAIT_MEM2CAC;
     wire [5:0] MEM_ADDRESS_MEM2CAC;
-    wire [31:0] WRITE_DATA_MEM2CAC, INDATA_MEM2CAC;
+    wire [31:0] INDATA_MEM2CAC;
+    wire [31:0] OUTDATA_MEM2CAC;
 
     CPU u_cpu(
         .INSTRUCTION(INSTRUCTION),
@@ -398,7 +399,7 @@ module system(
         .READ_DATA_MEM2CAC(READ_DATA_MEM2CAC),
         .WRITE_DATA_MEM2CAC(WRITE_DATA_MEM2CAC),
         .MEM_ADDRESS_MEM2CAC(MEM_ADDRESS_MEM2CAC),
-        .WRITE_DATA_MEM2CAC(WRITE_DATA_MEM2CAC),
+        .OUTDATA_MEM2CAC(OUTDATA_MEM2CAC),
         .INDATA_MEM2CAC(INDATA_MEM2CAC),
         .BUSYWAIT_MEM2CAC(BUSYWAIT_MEM2CAC)
     );
@@ -409,7 +410,7 @@ module system(
         .read(READ_DATA_MEM2CAC),
         .write(WRITE_DATA_MEM2CAC),
         .address(MEM_ADDRESS_MEM2CAC),
-        .writedata(WRITE_DATA_MEM2CAC),
+        .writedata(OUTDATA_MEM2CAC),
         .readdata(INDATA_MEM2CAC),
         .busywait(BUSYWAIT_MEM2CAC)
     );

@@ -41,6 +41,7 @@ wire [1:0] addr_offset = address[1:0];
 // Internal flags
 reg hit, miss, dirty, valid;
 reg [31:0] fetched_block;
+integer i;
 
 // Async hit detection logic
 always @(*) begin
@@ -79,7 +80,7 @@ always @(posedge clk or posedge reset) begin
         readdata <= 0;
 
         // Invalidate cache
-        integer i;
+        
         for (i=0;i<8;i=i+1) begin
             valids[i] <= 0;
             dirtys[i] <= 0;
