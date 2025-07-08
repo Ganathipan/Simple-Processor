@@ -267,7 +267,15 @@ endmodule
 module CPU(
     input [31:0] INSTRUCTION,
     input CLK, RESET, 
-    output wire [31:0] PC_OUT
+    output wire [31:0] PC_OUT,
+
+    // Memory interface
+    output reg READ_DATA_MEM2CAC,
+    output reg WRITE_DATA_MEM2CAC,
+    output reg [5:0] MEM_ADDRESS_MEM2CAC,
+    output reg [31:0] WRITE_DATA_MEM2CAC,
+    input [31:0] INDATA_MEM2CAC,
+    input BUSYWAIT_MEM2CAC
     );
 
     wire [7:0] OPERAND1, OPERAND2, ALURESULT;
@@ -354,14 +362,56 @@ module CPU(
         .ZERO(ZERO_FLAG)
     );
 
-    data_memory u_data_mem(
-        .clock(CLK),
+    data_cache u_data_cache(
+        .clk(CLK),
         .reset(RESET),
         .read(READ_DATA_MEM),
         .write(WRITE_DATA_MEM),
         .address(ALURESULT),
         .writedata(OPERAND1),
         .readdata(READ_MEM_OUT),
-        .busywait(BUSYWAIT)
+        .busywait(BUSYWAIT),
+        .mem_read(READ_DATA_MEM2CAC),
+        .mem_write(WRITE_DATA_MEM2CAC),
+        .mem_address(MEM_ADDRESS_MEM2CAC),
+        .mem_writedata(WRITE_DATA__MEM2CAC),
+        .mem_readdata(INDATA_MEM2CAC),
+        .mem_busywait(BUSYWAIT_MEM2CAC)
     );
+endmodule
+
+module system(
+    input [31:0] INSTRUCTION,
+    input CLK, RESET,
+    output wire [31:0] PC_OUT
+);
+
+    wire READ_DATA_MEM2CAC, WRITE_DATA_MEM2CAC, BUSYWAIT_MEM2CAC;
+    wire [5:0] MEM_ADDRESS_MEM2CAC;
+    wire [31:0] WRITE_DATA_MEM2CAC, INDATA_MEM2CAC;
+
+    CPU u_cpu(
+        .INSTRUCTION(INSTRUCTION),
+        .CLK(CLK),
+        .RESET(RESET),
+        .PC_OUT(PC_OUT),
+        .READ_DATA_MEM2CAC(READ_DATA_MEM2CAC),
+        .WRITE_DATA_MEM2CAC(WRITE_DATA_MEM2CAC),
+        .MEM_ADDRESS_MEM2CAC(MEM_ADDRESS_MEM2CAC),
+        .WRITE_DATA_MEM2CAC(WRITE_DATA_MEM2CAC),
+        .INDATA_MEM2CAC(INDATA_MEM2CAC),
+        .BUSYWAIT_MEM2CAC(BUSYWAIT_MEM2CAC)
+    );
+
+    data_memory u_data_mem(
+        .clock(CLK),
+        .reset(RESET),
+        .read(READ_DATA_MEM2CAC),
+        .write(WRITE_DATA_MEM2CAC),
+        .address(MEM_ADDRESS_MEM2CAC),
+        .writedata(WRITE_DATA_MEM2CAC),
+        .readdata(INDATA_MEM2CAC),
+        .busywait(BUSYWAIT_MEM2CAC)
+    );
+
 endmodule

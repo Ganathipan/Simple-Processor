@@ -14,14 +14,14 @@ module data_memory(
     input           reset,
     input           read,
     input           write,
-    input[7:0]      address,
-    input[7:0]      writedata,
-    output reg [7:0]readdata,
+    input[5:0]      address,
+    input[31:0]      writedata,
+    output reg [31:0] readdata,
     output reg      busywait
     );
 
     //Declare memory array 256x8-bits 
-    reg [7:0] memory_array [255:0];
+    reg [31:0] memory_array [65:0];
 
     //Detecting an incoming memory access
     reg readaccess, writeaccess;
