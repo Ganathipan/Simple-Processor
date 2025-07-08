@@ -1,0 +1,752 @@
+$date
+	Tue Jul  8 23:50:47 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	100ps
+$end
+$scope module cpu_tb $end
+$var wire 32 ! PC [31:0] $end
+$var reg 1 " CLK $end
+$var reg 32 # INSTRUCTION [31:0] $end
+$var reg 1 $ RESET $end
+$var integer 32 % i [31:0] $end
+$scope module mycpu $end
+$var wire 1 & BUSYWAIT_MEM2CAC $end
+$var wire 1 " CLK $end
+$var wire 32 ' INDATA_MEM2CAC [31:0] $end
+$var wire 32 ( INSTRUCTION [31:0] $end
+$var wire 1 $ RESET $end
+$var wire 1 ) ZERO_FLAG $end
+$var wire 1 * WRITE_DATA_MEM2CAC $end
+$var wire 1 + WRITE_DATA_MEM $end
+$var wire 1 , SIGN_CONTROL $end
+$var wire 1 - REG_WRITE_ENABLE $end
+$var wire 8 . READ_MEM_OUT [7:0] $end
+$var wire 1 / READ_DATA_MEM2CAC $end
+$var wire 1 0 READ_DATA_MEM $end
+$var wire 32 1 PC_OUT [31:0] $end
+$var wire 32 2 PC_IN [31:0] $end
+$var wire 32 3 OUTDATA_MEM2CAC [31:0] $end
+$var wire 1 4 OPERAND_CONTROL $end
+$var wire 8 5 OPERAND2 [7:0] $end
+$var wire 8 6 OPERAND1 [7:0] $end
+$var wire 6 7 MEM_ADDRESS_MEM2CAC [5:0] $end
+$var wire 1 8 JUMP_CONTROL $end
+$var wire 1 9 BUSYWAIT $end
+$var wire 2 : BRANCH_CONTROL [1:0] $end
+$var wire 8 ; ALURESULT [7:0] $end
+$var wire 3 < ALUOP [2:0] $end
+$var reg 8 = ALU_IN_DATA1 [7:0] $end
+$var reg 8 > ALU_IN_DATA2 [7:0] $end
+$var reg 8 ? REG_INDATA [7:0] $end
+$scope module u_alu $end
+$var wire 8 @ DATA1 [7:0] $end
+$var wire 8 A DATA2 [7:0] $end
+$var wire 8 B sum [7:0] $end
+$var wire 8 C shiftOut [7:0] $end
+$var wire 8 D orOut [7:0] $end
+$var wire 8 E mulOut [7:0] $end
+$var wire 8 F fwdOut [7:0] $end
+$var wire 8 G andOut [7:0] $end
+$var wire 1 H SHIFT_E $end
+$var wire 1 I MUL_E $end
+$var wire 3 J ALUOP [2:0] $end
+$var reg 8 K RESULT [7:0] $end
+$var reg 1 ) ZERO $end
+$scope module u0 $end
+$var wire 8 L DATA2 [7:0] $end
+$var wire 8 M RESULT [7:0] $end
+$upscope $end
+$scope module u1 $end
+$var wire 8 N DATA1 [7:0] $end
+$var wire 8 O DATA2 [7:0] $end
+$var wire 8 P RESULT [7:0] $end
+$upscope $end
+$scope module u3 $end
+$var wire 8 Q DATA1 [7:0] $end
+$var wire 8 R DATA2 [7:0] $end
+$var wire 8 S RESULT [7:0] $end
+$upscope $end
+$scope module u4 $end
+$var wire 8 T DATA1 [7:0] $end
+$var wire 8 U DATA2 [7:0] $end
+$var wire 8 V RESULT [7:0] $end
+$upscope $end
+$scope module u5 $end
+$var wire 8 W DATA1 [7:0] $end
+$var wire 8 X DATA2 [7:0] $end
+$var wire 1 I ENABLE $end
+$var reg 8 Y RESULT [7:0] $end
+$var reg 16 Z temp1 [15:0] $end
+$var reg 16 [ temp2 [15:0] $end
+$var integer 32 \ i [31:0] $end
+$upscope $end
+$scope module u6 $end
+$var wire 8 ] DATA1 [7:0] $end
+$var wire 8 ^ DATA2 [7:0] $end
+$var wire 1 H ENABLE $end
+$var reg 8 _ RESULT [7:0] $end
+$var reg 1 ` sign $end
+$var integer 32 a i [31:0] $end
+$upscope $end
+$upscope $end
+$scope module u_control $end
+$var wire 8 b OPCODE [7:0] $end
+$var reg 3 c ALUOP [2:0] $end
+$var reg 2 d BRANCH_CONTROL [1:0] $end
+$var reg 1 8 JUMP_CONTROL $end
+$var reg 1 4 OPERAND_CONTROL $end
+$var reg 1 0 READ_DATA_MEM $end
+$var reg 1 , SIGN_CONTROL $end
+$var reg 1 + WRITE_DATA_MEM $end
+$var reg 1 - WRITE_ENABLE $end
+$upscope $end
+$scope module u_data_cache $end
+$var wire 8 e address [7:0] $end
+$var wire 1 " clk $end
+$var wire 1 & mem_busywait $end
+$var wire 32 f mem_readdata [31:0] $end
+$var wire 1 0 read $end
+$var wire 1 $ reset $end
+$var wire 1 + write $end
+$var wire 8 g writedata [7:0] $end
+$var wire 3 h addr_tag [2:0] $end
+$var wire 2 i addr_offset [1:0] $end
+$var wire 3 j addr_index [2:0] $end
+$var reg 1 9 busywait $end
+$var reg 1 k dirty $end
+$var reg 1 l hit $end
+$var reg 6 m mem_address [5:0] $end
+$var reg 1 / mem_read $end
+$var reg 1 * mem_write $end
+$var reg 32 n mem_writedata [31:0] $end
+$var reg 1 o miss $end
+$var reg 8 p readdata [7:0] $end
+$var reg 3 q state [2:0] $end
+$var reg 1 r valid $end
+$var integer 32 s i [31:0] $end
+$upscope $end
+$scope module u_pc $end
+$var wire 1 " CLK $end
+$var wire 1 $ RESET $end
+$var wire 32 t PC_IN [31:0] $end
+$var reg 32 u PC_OUT [31:0] $end
+$upscope $end
+$scope module u_pcIn $end
+$var wire 2 v BRANCH [1:0] $end
+$var wire 8 w BRANCH_ADDRESS [7:0] $end
+$var wire 1 9 BUSYWAIT $end
+$var wire 1 8 JUMP $end
+$var wire 32 x PC_IN [31:0] $end
+$var wire 1 ) ZERO $end
+$var reg 32 y PC [31:0] $end
+$var reg 32 z PC_OUT [31:0] $end
+$var reg 32 { offset [31:0] $end
+$upscope $end
+$scope module u_regfile $end
+$var wire 1 " CLK $end
+$var wire 3 | INADDRESS [2:0] $end
+$var wire 8 } INDATA [7:0] $end
+$var wire 3 ~ OUT1ADDRESS [2:0] $end
+$var wire 3 !" OUT2ADDRESS [2:0] $end
+$var wire 1 $ RESET $end
+$var wire 1 - WRITE $end
+$var reg 8 "" OUT1DATA [7:0] $end
+$var reg 8 #" OUT2DATA [7:0] $end
+$var integer 32 $" counter [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 %" \reg_array[0] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 &" \reg_array[1] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 '" \reg_array[2] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 (" \reg_array[3] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 )" \reg_array[4] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 *" \reg_array[5] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 +" \reg_array[6] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_regfile $end
+$var reg 8 ," \reg_array[7] [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_data_cache $end
+$var reg 32 -" \data_blocks[0] [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_data_cache $end
+$var reg 32 ." \data_blocks[1] [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_data_cache $end
+$var reg 32 /" \data_blocks[2] [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_data_cache $end
+$var reg 32 0" \data_blocks[3] [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_data_cache $end
+$var reg 32 1" \data_blocks[4] [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_data_cache $end
+$var reg 32 2" \data_blocks[5] [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_data_cache $end
+$var reg 32 3" \data_blocks[6] [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module cpu_tb $end
+$scope module mycpu $end
+$scope module u_data_cache $end
+$var reg 32 4" \data_blocks[7] [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 4"
+b0 3"
+b0 2"
+b0 1"
+b0 0"
+b0 /"
+b0 ."
+b0 -"
+bx ,"
+bx +"
+bx *"
+bx )"
+bx ("
+bx '"
+bx &"
+bx %"
+bx $"
+bx #"
+bx ""
+bx !"
+bx ~
+b0 }
+bx |
+bx {
+bx z
+bx y
+bx x
+bx w
+bx v
+bx u
+bx t
+b1000 s
+xr
+b0 q
+b0 p
+xo
+bx n
+bx m
+xl
+xk
+b0 j
+b0 i
+b0 h
+bx g
+bz f
+b0 e
+bx d
+bx c
+bx b
+bx a
+x`
+b0 _
+bx ^
+bx ]
+b1000 \
+bx00000000 [
+b0 Z
+b0 Y
+bx X
+bx W
+bx V
+bx U
+bx T
+bx S
+bx R
+bx Q
+bx P
+bx O
+bx N
+bx M
+bx L
+b0 K
+bx J
+xI
+xH
+bx G
+bx F
+b0 E
+bx D
+b0 C
+bx B
+bx A
+bx @
+b0 ?
+bx >
+bx =
+bx <
+b0 ;
+bx :
+09
+x8
+bx 7
+bx 6
+bx 5
+x4
+bx 3
+bx 2
+bx 1
+x0
+0/
+b0 .
+x-
+x,
+x+
+0*
+x)
+bx (
+bz '
+z&
+b1000 %
+1$
+bx #
+0"
+bx !
+$end
+#10
+b0 !
+b0 1
+b0 u
+b0 x
+0k
+0r
+#19
+1o
+0l
+#20
+b100 y
+#30
+bx E
+bx Y
+bx Z
+b1000 \
+bx00000000 [
+b1001 >
+b1001 A
+b1001 L
+b1001 O
+b1001 R
+b1001 U
+b1001 X
+b1001 ^
+b100 2
+b100 t
+b100 z
+00
+0+
+1-
+14
+0,
+08
+b0 :
+b0 d
+b0 v
+b0 w
+b0 b
+b0 |
+b0 ~
+b1 !"
+b1001000000000000000000000000 #
+b1001000000000000000000000000 (
+#40
+b0 E
+b0 Y
+b1000 \
+bx00000000 [
+bx Z
+b10 j
+b1 i
+b1001 ?
+b1001 }
+0I
+0H
+b1001 ;
+b1001 K
+b1001 e
+b0 4"
+b0 3"
+b0 2"
+b0 1"
+b0 0"
+b0 /"
+b0 ."
+b0 -"
+b0 <
+b0 J
+b0 c
+b1000 s
+b1000 $"
+b0x00x G
+b0x00x S
+bx1xx1 D
+bx1xx1 V
+b1001 F
+b1001 M
+1"
+#50
+b0 ,"
+b0 +"
+b0 *"
+b0 )"
+b0 ("
+b0 '"
+b0 &"
+b0 %"
+b100 {
+#70
+b1000 \
+b0 [
+b0 Z
+b0 =
+b0 @
+b0 N
+b0 Q
+b0 T
+b0 W
+b0 ]
+b0 5
+b0 #"
+b0 6
+b0 g
+b0 ""
+#80
+b0 G
+b0 S
+b1001 D
+b1001 V
+0"
+#90
+0)
+b1001 B
+b1001 P
+#100
+0$
+#120
+1"
+#130
+b100 !
+b100 1
+b100 u
+b100 x
+b1001 %"
+#140
+b1000 2
+b1000 t
+b1000 z
+b1000 y
+#150
+b1001 Z
+b1000 \
+b100100000000 [
+b1 w
+b1 |
+b1 >
+b1 A
+b1 L
+b1 O
+b1 R
+b1 U
+b1 X
+b1 ^
+b1001 =
+b1001 @
+b1001 N
+b1001 Q
+b1001 T
+b1001 W
+b1001 ]
+b1000000000000000100000000 #
+b1000000000000000100000000 (
+b1001 6
+b1001 g
+b1001 ""
+#160
+b1000 {
+b0 j
+b1 ?
+b1 }
+b1 ;
+b1 K
+b1 e
+b1 G
+b1 S
+b1 F
+b1 M
+0"
+#170
+b1100 {
+b1010 B
+b1010 P
+#200
+1"
+b1 %
+#210
+b1000 !
+b1000 1
+b1000 u
+b1000 x
+b1 &"
+#220
+b1100 2
+b1100 t
+b1100 z
+b1100 y
+#230
+b1000 2
+b1000 t
+b1000 z
+19
+1+
+0-
+04
+b0 w
+b1000 b
+b0 |
+b1000000000000000000001000 #
+b1000000000000000000001000 (
+b1 5
+b1 #"
+#240
+b10000 {
+0"
+#250
+b1100 {
+#280
+b11 q
+b0 7
+b0 m
+1/
+b10 %
+1"
+#320
+0"
+#360
+b11 %
+1"
+#400
+0"
+#440
+b100 %
+1"
+#480
+0"
+#520
+b101 %
+1"
+#560
+0"
+#600
+b110 %
+1"
+#640
+0"
+#680
+b111 %
+1"
+#720
+0"
+#760
+b1000 %
+1"
+#800
+0"
+#840
+b1001 %
+1"
+#880
+0"
+#920
+b1010 %
+1"
+#960
+0"
+#1000
+b1011 %
+1"
+#1040
+0"
+#1080
+b1100 %
+1"
+#1120
+0"
+#1160
+b1101 %
+1"
+#1200
+0"
+#1240
+b1110 %
+1"
+#1280
+0"
+#1320
+b1111 %
+1"
+#1360
+0"
+#1400
+b10000 %
+1"
+#1440
+0"
+#1480
+b10001 %
+1"
+#1520
+0"
+#1560
+b10010 %
+1"
+#1600
+0"
+#1640
+b10011 %
+1"
+#1680
+0"
+#1720
+b10100 %
+1"
+#1760
+0"
+#1800
+b10101 %
+1"
+#1840
+0"
+#1880
+b10110 %
+1"
+#1920
+0"
+#1960
+b10111 %
+1"
+#2000
+0"
+#2040
+b11000 %
+1"
+#2080
+0"
+#2120
+b11001 %
+1"
+#2160
+0"
+#2200
+b11010 %
+1"
+#2240
+0"
+#2280
+b11011 %
+1"
+#2320
+0"
+#2360
+b11100 %
+1"
+#2400
+0"
+#2440
+b11101 %
+1"
+#2480
+0"
+#2520
+b11110 %
+1"
+#2560
+0"
+#2600
+1"
+#2620

@@ -19,8 +19,8 @@ module data_cache(
     input mem_busywait
 );
 
-// Tag: 5 bits, Valid:1, Dirty:1, Data:4x8 bits
-reg [4:0] tags [0:7];
+// Tag: 3bits, Valid:1, Dirty:1, Data:4x8 bits
+reg [2:0] tags [0:7];
 reg valids [0:7];
 reg dirtys [0:7];
 reg [31:0] data_blocks [0:7]; // 4 bytes per block
@@ -34,8 +34,8 @@ localparam WRITE_BACK = 3'b100;
 reg [2:0] state;
 
 // Address decomposition
-wire [4:0] addr_tag = address[7:3];
-wire [2:0] addr_index = address[2:0];
+wire [2:0] addr_tag = address[7:5];
+wire [2:0] addr_index = address[4:2];
 wire [1:0] addr_offset = address[1:0];
 
 // Internal flags

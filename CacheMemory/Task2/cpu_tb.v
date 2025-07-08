@@ -35,7 +35,7 @@ module cpu_tb;
 
     initial begin
         // Load instruction memory from file
-        $readmemb("instr_mem.mem", instr_mem);
+        $readmemb("instr_mem_cache.mem", instr_mem);
 
         // Initialize waveform dump
         $dumpfile("cpu_wavedata.vcd");
