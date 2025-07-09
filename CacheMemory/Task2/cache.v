@@ -1,4 +1,4 @@
-`timescale 1ns/100ps
+//`timescale 1ns/100ps
 
 module data_cache(
     input clk,
@@ -34,9 +34,15 @@ localparam WRITE_BACK = 3'b100;
 reg [2:0] state;
 
 // Address decomposition
-wire [2:0] addr_tag = address[7:5];
-wire [2:0] addr_index = address[4:2];
-wire [1:0] addr_offset = address[1:0];
+reg [2:0] addr_tag;
+reg [2:0] addr_index;
+reg [1:0] addr_offset;
+
+always @(*) begin 
+    addr_tag <= address[7:5];
+    addr_index <= address[4:2];
+    addr_offset <= address[1:0];
+end
 
 // Internal flags
 reg hit, miss, dirty, valid;
@@ -67,6 +73,7 @@ always @(*) begin
             2'b10: readdata = data_blocks[addr_index][23:16];
             2'b11: readdata = data_blocks[addr_index][31:24];
         endcase
+        busywait = 0;  // Deassert busywait on hit
     end
 end
 

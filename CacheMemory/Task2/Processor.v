@@ -216,10 +216,10 @@ module control_unit(
 
         WRITE_ENABLE  = (OPCODE == OP_LOADI || OPCODE == OP_MOV || OPCODE == OP_ADD ||
                         OPCODE == OP_SUB || OPCODE == OP_AND || OPCODE == OP_OR ||
-                        OPCODE == OP_MUL || OPCODE == OP_SHIFT  || OPCODE == OP_SWI  || OPCODE == OP_SWD) ? 1'b1 : 1'b0;
+                        OPCODE == OP_MUL || OPCODE == OP_SHIFT  || OPCODE == OP_LWI  || OPCODE == OP_LWD) ? 1'b1 : 1'b0;
 
-        WRITE_DATA_MEM = (OPCODE == OP_LWD || OPCODE == OP_LWI) ? 1'b1: 1'b0;                                                 //<-----------------
-        READ_DATA_MEM = (OPCODE == OP_SWD || OPCODE == OP_SWI) ? 1'b1: 1'b0;                                                 //<-----------------
+        WRITE_DATA_MEM = (OPCODE == OP_SWD || OPCODE == OP_SWI) ? 1'b1: 1'b0;                                                 //<-----------------
+        READ_DATA_MEM = (OPCODE == OP_LWD || OPCODE == OP_LWI) ? 1'b1: 1'b0;                                                 //<-----------------
 
     end
 endmodule

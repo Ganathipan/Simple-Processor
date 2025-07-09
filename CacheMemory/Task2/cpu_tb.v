@@ -12,7 +12,7 @@ module cpu_tb;
     integer i;
 
     // Instantiate the CPU
-    CPU mycpu (
+    system mysystem (
         .PC_OUT(PC),
         .INSTRUCTION(INSTRUCTION),
         .CLK(CLK),
@@ -42,10 +42,15 @@ module cpu_tb;
         $dumpvars(0, cpu_tb);
 
         for (i = 0; i < 8; i = i + 1) 
-            $dumpvars(1, cpu_tb.mycpu.u_regfile.reg_array[i]);
+            $dumpvars(1, cpu_tb.mysystem.u_cpu.u_regfile.reg_array[i]);
 
         for (i = 0; i < 8; i = i+1)
-            $dumpvars(2, cpu_tb.mycpu.u_data_cache.data_blocks[i]);
+            $dumpvars(2, cpu_tb.mysystem.u_cpu.u_data_cache.data_blocks[i]);
+
+        for (i = 0; i < 8; i = i+1)
+            $dumpvars(3, cpu_tb.mysystem.u_cpu.u_data_mem.memory_array[i]);
+
+        i = 0; // Resetting counter
 
         // Initialize signals
         CLK = 0;
@@ -57,7 +62,7 @@ module cpu_tb;
         $display("->    Cycle %0d: PC = %0d, Instruction = %b %b %b %b", i, PC, INSTRUCTION[31:24], INSTRUCTION[23:16], INSTRUCTION[15:8], INSTRUCTION[7:0]);
 
         // Run for 20 cycles and display PC and instruction at each cycle
-        for (i = 0; i < 30; i = i + 1) begin
+        for (i = 0; i < 126; i = i + 1) begin
             @(posedge CLK);
             $display("->    Cycle %0d: PC = %0d, Instruction = %b %b %b %b", i, PC, INSTRUCTION[31:24], INSTRUCTION[23:16], INSTRUCTION[15:8], INSTRUCTION[7:0]);
         end
