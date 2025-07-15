@@ -96,7 +96,7 @@ module aluUnit(
     );
 
     wire [7:0] sum, andOut, orOut, fwdOut, mulOut, shiftOut;
-    wire SHIFT_E;
+    wire SHIFT_E, MUL_E;
 
     assign SHIFT_E = (ALUOP == 3'b101) ? 1'b1: 1'b0;
     assign MUL_E   = (ALUOP == 3'b100) ? 1'b1: 1'b0;
@@ -225,59 +225,80 @@ module control_unit(
 endmodule
 
 module ProgramCounter(
-    input CLK, RESET,
-    input      [31:0] PC_IN,
-    output reg [31:0] PC_OUT
+    input wire CLK, RESET,
+    input wire [31:0] PC_IN,
+    output reg [31:0] PC_OUT,
+    input wire BUSYWAIT
     );
 
     always @(posedge CLK or posedge RESET) begin 
         if (RESET) begin
             PC_OUT <= #1 32'b0;
         end
-        else begin
+        else if (!BUSYWAIT) begin
             PC_OUT <= #1 PC_IN;
         end
     end
 endmodule
 
 module pcIncrementer (
-    input [31:0] PC_IN,
-    input [7:0]  BRANCH_ADDRESS,
-    input [1:0]  BRANCH, 
-    input        JUMP, ZERO,
-    input       BUSYWAIT,
+    input wire RESET,
+    input wire [31:0] PC_IN,
+    input wire [7:0]  BRANCH_ADDRESS,
+    input wire [1:0]  BRANCH, 
+    input wire JUMP, ZERO,
+    input wire BUSYWAIT,
     output reg [31:0] PC_OUT
     );
 
     reg [31:0] PC;
     reg [31:0] offset;
 
-    always @(*) begin
-        PC <= #1 PC_IN + 32'd4;
- 
-        offset <= #2 PC + {{22{BRANCH_ADDRESS[7]}}, BRANCH_ADDRESS, 2'b00}; 
+    always @(RESET) begin
+        PC = 32'b0; // Reset PC to zero
+        PC_OUT = 32'b0;
 
-        PC_OUT =    BUSYWAIT ? PC_IN : 
-                    JUMP ? offset : 
-                    (BRANCH == 2'b01 && ZERO) ? offset : 
-                    (BRANCH == 2'b10 && !ZERO) ? offset : PC;
+    end
+
+    always @(*) begin
+        if (BUSYWAIT) begin
+            PC_OUT = PC_IN; // Hold the current PC value if busywait
+        end
+        else begin
+            PC <= #1 PC_IN + 32'd4;
+ 
+            offset <= #2 PC + {{22{BRANCH_ADDRESS[7]}}, BRANCH_ADDRESS, 2'b00}; 
+
+            PC_OUT =    JUMP ? offset : 
+                        (BRANCH == 2'b01 && ZERO) ? offset : 
+                        (BRANCH == 2'b10 && !ZERO) ? offset : PC;
+        end
     end
 endmodule
 
 module CPU(
-    input [31:0] INSTRUCTION,
     input CLK, RESET, 
-    output wire [31:0] PC_OUT,
 
-    // Memory interface
+    // Data Memory interface
     output wire READ_DATA_MEM2CAC,
     output wire WRITE_DATA_MEM2CAC,
     output wire [5:0] MEM_ADDRESS_MEM2CAC,
     output wire [31:0] OUTDATA_MEM2CAC,
     input [31:0] INDATA_MEM2CAC,
-    input BUSYWAIT_MEM2CAC
+    input BUSYWAIT_MEM2CAC,
+
+    // Instruction Memory interface
+    output wire INST_MEM_READ,
+    output wire [5:0] INST_MEM_ADDRESS,
+    input [127:0] INST_MEM_DATA,
+    input INST_MEM_BUSYWAIT
     );
 
+    // Instruction from cache
+    wire [31:0] INSTRUCTION;
+    wire BUSYWAIT_INST_CACHE;
+
+    // General Control Signals
     wire [7:0] OPERAND1, OPERAND2, ALURESULT;
     wire [2:0] ALUOP;
     wire REG_WRITE_ENABLE;
@@ -285,21 +306,28 @@ module CPU(
 
     wire [1:0] BRANCH_CONTROL;
     wire JUMP_CONTROL;
-    wire ZERO_FLAG;        
+    wire ZERO_FLAG;
     wire [31:0] PC_IN;
+    wire [31:0] PC_OUT;
+    wire BUSYWAIT;
 
-    wire READ_DATA_MEM, WRITE_DATA_MEM, BUSYWAIT;
+    wire READ_DATA_MEM, WRITE_DATA_MEM;
+    wire BUSYWAIT_DATA_CACHE;
     wire [7:0] READ_MEM_OUT;
     reg [7:0] REG_INDATA;
+
+    assign BUSYWAIT = BUSYWAIT_MEM2CAC || BUSYWAIT_INST_CACHE;
 
     ProgramCounter u_pc (
         .CLK(CLK),
         .RESET(RESET),
         .PC_IN(PC_IN),
-        .PC_OUT(PC_OUT)
+        .PC_OUT(PC_OUT),
+        .BUSYWAIT(BUSYWAIT)
     );
 
     pcIncrementer u_pcIn (
+        .RESET(RESET),
         .PC_IN(PC_OUT),
         .BRANCH_ADDRESS(INSTRUCTION[15:8]),
         .BRANCH(BRANCH_CONTROL), 
@@ -339,14 +367,11 @@ module CPU(
         ALU_IN_DATA1 = OPERAND1;
         if (OPERAND_CONTROL) begin
             ALU_IN_DATA2 = INSTRUCTION[31:24];
-        end
-        else begin
-            if (SIGN_CONTROL) begin
-                ALU_IN_DATA2 <= #2 (~OPERAND2 + 8'b1);
-            end
-            else begin
+        end else begin
+            if (SIGN_CONTROL)
+                ALU_IN_DATA2 = ~OPERAND2 + 1;
+            else
                 ALU_IN_DATA2 = OPERAND2;
-            end
         end
     end    
 
@@ -370,7 +395,7 @@ module CPU(
         .address(ALURESULT),
         .writedata(OPERAND1),
         .readdata(READ_MEM_OUT),
-        .busywait(BUSYWAIT),
+        .busywait(BUSYWAIT_DATA_CACHE),
         .mem_read(READ_DATA_MEM2CAC),
         .mem_write(WRITE_DATA_MEM2CAC),
         .mem_address(MEM_ADDRESS_MEM2CAC),
@@ -378,30 +403,52 @@ module CPU(
         .mem_readdata(INDATA_MEM2CAC),
         .mem_busywait(BUSYWAIT_MEM2CAC)
     );
-endmodule
 
-module system(
-    input [31:0] INSTRUCTION,
-    input CLK, RESET,
-    output wire [31:0] PC_OUT
+    inst_cache u_inst_cache(
+    .clock(CLK),
+    .reset(RESET),
+    .address(PC_OUT),
+    .read(1'b1),            // Always fetching instructions
+    .readdata(INSTRUCTION),
+    .busywait(BUSYWAIT_INST_CACHE),
+    .mem_read(INST_MEM_READ),
+    .mem_address(INST_MEM_ADDRESS),
+    .mem_readdata(INST_MEM_DATA),
+    .mem_busywait(INST_MEM_BUSYWAIT)
 );
 
-    wire READ_DATA_MEM2CAC, WRITE_DATA_MEM2CAC, BUSYWAIT_MEM2CAC;
+endmodule
+
+
+module system(
+    input CLK, RESET
+    );
+
+    // Data memory <-> Cache interface
+    wire READ_DATA_MEM2CAC, WRITE_DATA_MEM2CAC;
+    wire BUSYWAIT_MEM2CAC;
     wire [5:0] MEM_ADDRESS_MEM2CAC;
     wire [31:0] INDATA_MEM2CAC;
     wire [31:0] OUTDATA_MEM2CAC;
 
+    // Instruction memory <-> Inst Cache interface
+    wire INST_MEM_READ, INST_MEM_BUSYWAIT;
+    wire [127:0] INST_MEM_DATA;
+    wire [5:0] INST_MEM_ADDRESS;
+
     CPU u_cpu(
-        .INSTRUCTION(INSTRUCTION),
         .CLK(CLK),
         .RESET(RESET),
-        .PC_OUT(PC_OUT),
         .READ_DATA_MEM2CAC(READ_DATA_MEM2CAC),
         .WRITE_DATA_MEM2CAC(WRITE_DATA_MEM2CAC),
         .MEM_ADDRESS_MEM2CAC(MEM_ADDRESS_MEM2CAC),
         .OUTDATA_MEM2CAC(OUTDATA_MEM2CAC),
         .INDATA_MEM2CAC(INDATA_MEM2CAC),
-        .BUSYWAIT_MEM2CAC(BUSYWAIT_MEM2CAC)
+        .BUSYWAIT_MEM2CAC(BUSYWAIT_MEM2CAC),
+        .INST_MEM_READ(INST_MEM_READ),
+        .INST_MEM_ADDRESS(INST_MEM_ADDRESS),
+        .INST_MEM_DATA(INST_MEM_DATA),
+        .INST_MEM_BUSYWAIT(INST_MEM_BUSYWAIT)
     );
 
     data_memory u_data_mem(
@@ -415,4 +462,11 @@ module system(
         .busywait(BUSYWAIT_MEM2CAC)
     );
 
+    instruction_memory u_inst_mem(
+        .clock(CLK),
+        .read(INST_MEM_READ),
+        .address(INST_MEM_ADDRESS),
+        .readinst(INST_MEM_DATA),
+        .busywait(INST_MEM_BUSYWAIT)
+    );
 endmodule

@@ -10,22 +10,19 @@ This memory allows instructions to be read as 16-Byte blocks
 */
 
 module instruction_memory(
-	clock,
-	read,
-    address,
-    readinst,
-	busywait
+	input clock,
+	input read,
+	input [5:0] address,
+	output reg [127:0] readinst,
+	output reg busywait
 );
-input				clock;
-input				read;
-input[5:0]			address;
-output reg [127:0]	readinst;
-output	reg			busywait;
 
 reg readaccess;
 
 //Declare memory array 1024x8-bits 
 reg [7:0] memory_array [1023:0];
+integer i;
+
 
 //Initialize instruction memory
 initial
@@ -33,15 +30,15 @@ begin
 	busywait = 0;
 	readaccess = 0;
 	
-	/*
+	
     // Sample program given below. You may hardcode your software program here, or load it from a file:
     {memory_array[10'd3],  memory_array[10'd2],  memory_array[10'd1],  memory_array[10'd0]}  = 32'b00000000000001000000000000011001; // loadi 4 #25
     {memory_array[10'd7],  memory_array[10'd6],  memory_array[10'd5],  memory_array[10'd4]}  = 32'b00000000000001010000000000100011; // loadi 5 #35
     {memory_array[10'd11], memory_array[10'd10], memory_array[10'd9],  memory_array[10'd8]}  = 32'b00000010000001100000010000000101; // add 6 4 5
     {memory_array[10'd15], memory_array[10'd14], memory_array[10'd13], memory_array[10'd12]} = 32'b00000000000000010000000001011010; // loadi 1 90
     {memory_array[10'd19], memory_array[10'd18], memory_array[10'd17], memory_array[10'd16]} = 32'b00000011000000010000000100000100; // sub 1 1 4
-	*/
-	$readmemb("instr_mem_cache.mem", memory_array);
+	
+	//$readmemb("instr_mem_cache.mem", memory_array);
 
 end
 
