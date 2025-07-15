@@ -265,6 +265,7 @@ module pcIncrementer (
 endmodule
 
 module CPU(
+    input [31:0] INSTRUCTION,
     input CLK, RESET, 
     output wire [31:0] PC_OUT,
 
@@ -275,12 +276,6 @@ module CPU(
     output wire [31:0] OUTDATA_MEM2CAC,
     input [31:0] INDATA_MEM2CAC,
     input BUSYWAIT_MEM2CAC
-
-    // Instruction Mem interface
-    output wire INST_MEM_READ,
-    output wire [5:0] INST_MEM_ADDRESS,
-    input [127:0] INST_MEM_DATA,
-    input INST_MEM_BUSYWAIT
     );
 
     wire [7:0] OPERAND1, OPERAND2, ALURESULT;
@@ -383,32 +378,18 @@ module CPU(
         .mem_readdata(INDATA_MEM2CAC),
         .mem_busywait(BUSYWAIT_MEM2CAC)
     );
-
-    inst_cache u_inst_cache(
-        .CLK(CLK),
-        .RESET(RESET),
-        .PC(PC_OUT),
-        .INSTRUCTION(INSTRUCTION),
-        .BUSYWAIT(BUSYWAIT),
-        .INST_MEM_READ(INST_MEM_READ),
-        .INST_MEM_ADDRESS(INST_MEM_ADDRESS),
-        .INST_MEM_DATA(INST_MEM_DATA),
-        .INST_MEM_BUSYWAIT(INST_MEM_BUSYWAIT)
-    );
 endmodule
 
 module system(
+    input [31:0] INSTRUCTION,
     input CLK, RESET,
-    );
+    output wire [31:0] PC_OUT
+);
 
     wire READ_DATA_MEM2CAC, WRITE_DATA_MEM2CAC, BUSYWAIT_MEM2CAC;
     wire [5:0] MEM_ADDRESS_MEM2CAC;
     wire [31:0] INDATA_MEM2CAC;
     wire [31:0] OUTDATA_MEM2CAC;
-
-    wire INST_MEM_READ, INST_MEM_BUSYWAIT;
-    wire [127:0] INST_MEM_DATA;
-    wire [5:0] INST_MEM_ADDRESS;
 
     CPU u_cpu(
         .INSTRUCTION(INSTRUCTION),
@@ -420,11 +401,7 @@ module system(
         .MEM_ADDRESS_MEM2CAC(MEM_ADDRESS_MEM2CAC),
         .OUTDATA_MEM2CAC(OUTDATA_MEM2CAC),
         .INDATA_MEM2CAC(INDATA_MEM2CAC),
-        .BUSYWAIT_MEM2CAC(BUSYWAIT_MEM2CAC),
-        .INST_MEM_READ(INST_MEM_READ),
-        .INST_MEM_ADDRESS(INST_MEM_ADDRESS),
-        .INST_MEM_DATA(INST_MEM_DATA),
-        .INST_MEM_BUSYWAIT(INST_MEM_BUSYWAIT)
+        .BUSYWAIT_MEM2CAC(BUSYWAIT_MEM2CAC)
     );
 
     data_memory u_data_mem(
@@ -436,14 +413,6 @@ module system(
         .writedata(OUTDATA_MEM2CAC),
         .readdata(INDATA_MEM2CAC),
         .busywait(BUSYWAIT_MEM2CAC)
-    );
-
-    instruction_memory u_inst_mem(
-        .clock(CLK),
-        .read(INST_MEM_READ),
-        .address(INST_MEM_ADDRESS),
-        .readinst(INST_MEM_DATA),
-        .busywait(INST_MEM_BUSYWAIT)
     );
 
 endmodule
