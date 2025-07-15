@@ -53,8 +53,8 @@ reg miss;
 reg [31:0] selected_word;
 
 // FSM state
-localparam IDLE = 1'b0;
-localparam MEM_READ = 1'b1;
+localparam IDLE = 2'b0;
+localparam MEM_READ = 2'b1;
 reg state;
 
 integer i;
@@ -94,7 +94,7 @@ end
 // -----------------------
 // Main FSM
 // -----------------------
-always @(posedge clock, posedge reset) begin
+always @(posedge clock or posedge reset) begin
     if (reset) begin
         // Invalidate cache
         for (i=0;i<8;i=i+1) begin
@@ -106,36 +106,36 @@ always @(posedge clock, posedge reset) begin
         readdata <= 32'b0;
     end
     else begin
-        case (state)
-            IDLE: begin
-                if (hit) begin
-                    busywait <= 0;
-                    readdata <= selected_word;
-                end
-                else begin
-                    // Miss detected
-                    busywait <= 1;
-                    mem_read <= 1;
-                    mem_address <= {address[9:4]}; // 6-bit block address
-                    state <= MEM_READ;
-                end
+        if (state == IDLE) begin
+            if (hit) begin
+                busywait <= 0;
+                readdata <= selected_word;
             end
-
-            MEM_READ: begin
-                // Wait for memory to finish
-                if (!mem_busywait) begin
-                    mem_read <= 0;
-                    // Write fetched block to cache with latency
-                    #1;
-                    data_array[index] <= mem_readdata;
-                    tag_array[index] <= tag;
-                    valid_array[index] <= 1;
-                    #1.9; // latency before serving
-                    readdata <= selected_word; // word selection happens again automatically
-                    state <= IDLE;
-                end
+            else begin
+                // Miss detected
+                busywait <= 1;
+                mem_read <= 1;
+                mem_address <= {address[9:4]}; // 6-bit block address
+                state <= MEM_READ;
             end
-        endcase
+        end
     end
 end
+
+always @(*) begin 
+    if (state == MEM_READ && !reset) begin 
+        if (!mem_busywait) begin
+            mem_read <= 0;
+            // Write fetched block to cache with latency
+            #1;
+            data_array[index] <= mem_readdata;
+            tag_array[index] <= tag;
+            valid_array[index] <= 1;
+            #1.9; // latency before serving
+            readdata <= selected_word; // word selection happens again automatically
+            state <= IDLE;
+        end
+    end 
+end
+
 endmodule

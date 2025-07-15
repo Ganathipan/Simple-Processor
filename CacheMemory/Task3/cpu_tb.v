@@ -49,7 +49,7 @@ module cpu_tb;
         CLK = 0;
         RESET = 1;
 
-        #15; // Wait for reset propagation
+        #11; // Wait for reset propagation
         RESET = 0;
 
         // Run simulation

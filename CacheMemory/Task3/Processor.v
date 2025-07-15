@@ -231,17 +231,18 @@ module ProgramCounter(
     input wire BUSYWAIT
     );
 
-    always @(posedge CLK or posedge RESET) begin 
+    always @(posedge CLK or RESET) begin 
         if (RESET) begin
             PC_OUT <= #1 32'b0;
         end
-        else if (!BUSYWAIT) begin
+        else begin
             PC_OUT <= #1 PC_IN;
         end
     end
 endmodule
 
 module pcIncrementer (
+    input wire CLK,
     input wire RESET,
     input wire [31:0] PC_IN,
     input wire [7:0]  BRANCH_ADDRESS,
@@ -260,13 +261,13 @@ module pcIncrementer (
 
     end
 
-    always @(*) begin
+    always @(posedge CLK) begin
         if (BUSYWAIT) begin
             PC_OUT = PC_IN; // Hold the current PC value if busywait
         end
         else begin
             PC <= #1 PC_IN + 32'd4;
- 
+
             offset <= #2 PC + {{22{BRANCH_ADDRESS[7]}}, BRANCH_ADDRESS, 2'b00}; 
 
             PC_OUT =    JUMP ? offset : 
@@ -327,6 +328,7 @@ module CPU(
     );
 
     pcIncrementer u_pcIn (
+        .CLK(CLK),
         .RESET(RESET),
         .PC_IN(PC_OUT),
         .BRANCH_ADDRESS(INSTRUCTION[15:8]),
@@ -408,7 +410,6 @@ module CPU(
     .clock(CLK),
     .reset(RESET),
     .address(PC_OUT),
-    .read(1'b1),            // Always fetching instructions
     .readdata(INSTRUCTION),
     .busywait(BUSYWAIT_INST_CACHE),
     .mem_read(INST_MEM_READ),

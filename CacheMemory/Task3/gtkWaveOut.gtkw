@@ -1,0 +1,52 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Tue Jul 15 22:44:49 2025
+[*]
+[dumpfile] "/home/ganathipan/CO224_CA/VerilogHDL/ProcessorBuild/CacheMemory/Task3/cpu_wavedata.vcd"
+[dumpfile_mtime] "Tue Jul 15 22:42:59 2025"
+[dumpfile_size] 42290
+[savefile] "/home/ganathipan/CO224_CA/VerilogHDL/ProcessorBuild/CacheMemory/Task3/gtkWaveOut.gtkw"
+[timestart] 1464
+[size] 1664 813
+[pos] -1 -1
+*-3.000000 1406 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] cpu_tb.
+[treeopen] cpu_tb.mysystem.
+[treeopen] cpu_tb.mysystem.u_cpu.
+[sst_width] 214
+[signals_width] 198
+[sst_expanded] 1
+[sst_vpaned_height] 227
+@28
+cpu_tb.CLK
+cpu_tb.mysystem.u_cpu.BUSYWAIT_DATA_CACHE
+cpu_tb.mysystem.u_cpu.BUSYWAIT_INST_CACHE
+cpu_tb.mysystem.u_cpu.BUSYWAIT
+@200
+-
+@22
+cpu_tb.mysystem.u_cpu.u_inst_cache.address[31:0]
+@28
+cpu_tb.mysystem.u_cpu.u_inst_cache.busywait
+cpu_tb.mysystem.u_cpu.u_inst_cache.mem_busywait
+cpu_tb.mysystem.u_cpu.u_inst_cache.mem_read
+@22
+cpu_tb.mysystem.u_cpu.u_inst_cache.mem_readdata[127:0]
+cpu_tb.mysystem.u_cpu.u_inst_cache.\data_array[0][127:0]
+@200
+-
+@29
+cpu_tb.mysystem.u_cpu.u_pc.PC_OUT[31:0]
+@22
+cpu_tb.mysystem.u_cpu.INSTRUCTION[31:0]
+cpu_tb.mysystem.u_cpu.u_inst_cache.selected_word[31:0]
+cpu_tb.mysystem.u_cpu.u_inst_cache.block_data[127:0]
+@200
+-
+@24
+cpu_tb.mysystem.u_cpu.u_regfile.\reg_array[1][7:0]
+cpu_tb.mysystem.u_cpu.u_regfile.\reg_array[4][7:0]
+cpu_tb.mysystem.u_cpu.u_regfile.\reg_array[5][7:0]
+cpu_tb.mysystem.u_cpu.u_regfile.\reg_array[6][7:0]
+[pattern_trace] 1
+[pattern_trace] 0
