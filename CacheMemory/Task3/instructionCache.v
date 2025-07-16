@@ -38,7 +38,7 @@ reg         valid_array [7:0];
 // tag bits: [31:11] (upper bits)
 wire [2:0] index = address[6:4];
 wire [3:0] offset = address[3:0];
-wire [20:0] tag = address[31:11];
+wire [25:0] tag = address[31:7];
 
 // -----------------------
 // Cache line signals
@@ -63,31 +63,32 @@ integer i;
 // Asynchronous indexing with artificial latency
 // -----------------------
 always @(*) begin
-    #1; // indexing latency
-    block_data = data_array[index];
-    stored_tag = tag_array[index];
-    stored_valid = valid_array[index];
+    // indexing latency
+    #1;
+    block_data <= data_array[index];
+    stored_tag <= tag_array[index];
+    stored_valid <= valid_array[index];
 end
 
 // -----------------------
 // Tag comparison + hit detection
 // -----------------------
 always @(*) begin
-    #0.9; // tag comparison latency
-    hit = (stored_valid && (stored_tag == tag));
-    miss = !hit;
+   // tag comparison latency
+    hit <= #0.9 (stored_valid && (stored_tag == tag));
+    miss <= !hit;
 end
 
 // -----------------------
 // Word selection
 // -----------------------
 always @(*) begin
-    #1; // selection latency
+    // selection latency
     case (offset[3:2])
-        2'b00: selected_word = block_data[31:0];
-        2'b01: selected_word = block_data[63:32];
-        2'b10: selected_word = block_data[95:64];
-        2'b11: selected_word = block_data[127:96];
+        2'b00: selected_word <= #1 block_data[31:0];
+        2'b01: selected_word <= #1 block_data[63:32];
+        2'b10: selected_word <= #1 block_data[95:64];
+        2'b11: selected_word <= #1 block_data[127:96];
     endcase
 end
 
@@ -126,11 +127,10 @@ always @(posedge clock, posedge reset) begin
                 if (!mem_busywait) begin
                     mem_read <= 0;
                     // Write fetched block to cache with latency
-                    #1;
-                    data_array[index] <= mem_readdata;
-                    tag_array[index] <= tag;
-                    valid_array[index] <= 1;
-                    #1.9; // latency before serving
+                    data_array[index] <= #1 mem_readdata;
+                    tag_array[index] <= #1 tag;
+                    valid_array[index] <= #1 1;
+                    // latency before serving
                     readdata <= selected_word; // word selection happens again automatically
                     state <= IDLE;
                 end

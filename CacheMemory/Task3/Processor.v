@@ -231,7 +231,7 @@ module ProgramCounter(
     input wire BUSYWAIT
     );
 
-    always @(posedge CLK or RESET) begin 
+    always @(posedge CLK or posedge RESET) begin 
         if (RESET) begin
             PC_OUT <= #1 32'b0;
         end
@@ -255,17 +255,21 @@ module pcIncrementer (
     reg [31:0] PC;
     reg [31:0] offset;
 
+    reg [31:0] PC_PREV;
+
     always @(RESET) begin
         PC = 32'b0; // Reset PC to zero
         PC_OUT = 32'b0;
+        PC_PREV = 32'b0;
 
     end
 
-    always @(posedge CLK) begin
+    always @(*) begin
         if (BUSYWAIT) begin
-            PC_OUT = PC_IN; // Hold the current PC value if busywait
+            PC_OUT = PC_PREV; // Hold the current PC value if busywait
         end
         else begin
+            PC_PREV = PC_IN;
             PC <= #1 PC_IN + 32'd4;
 
             offset <= #2 PC + {{22{BRANCH_ADDRESS[7]}}, BRANCH_ADDRESS, 2'b00}; 
