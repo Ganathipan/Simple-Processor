@@ -267,6 +267,7 @@ module pcIncrementer (
     always @(*) begin
         if (BUSYWAIT) begin
             PC_OUT = PC_PREV; // Hold the current PC value if busywait
+            // PC_OUT = PC_IN; // Hold the current PC value if busywait
         end
         else begin
             PC_PREV = PC_IN;
