@@ -90,7 +90,7 @@ always @(*) begin
         2'b10: selected_word <= #1 block_data[95:64];
         2'b11: selected_word <= #1 block_data[127:96];
     endcase
-    readdata <= selected_word; // Update output
+    // readdata <= selected_word; // Update output
 end
 
 // -----------------------
@@ -133,8 +133,8 @@ always @(posedge clock, posedge reset) begin
                     valid_array[index] <= #1 1;
                     
                     // latency before serving
-                    readdata <= selected_word; // word selection happens again automatically
-                    busywait = #1 0; // Clear busywait
+                    //#1.9 busywait <= 0; // Clear busywait
+                    busywait <= 0; // Clear busywait
                     state <= IDLE;
                 end
             end
