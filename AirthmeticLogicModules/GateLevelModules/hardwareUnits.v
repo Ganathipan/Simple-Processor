@@ -1,41 +1,53 @@
+// -----------------------------------------------------------------------------
 // Authors: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
-// Date: 2025-06-22
-// Institution: Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
+// Date: 2025-06-22  
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
+// hardwareUnits.v - Gate-Level Sequential Hardware Implementations
+// Purpose: Contains gate-level implementations of complex arithmetic operations
+//          (shifter and multiplier) using only basic logic gates and FSM control.
+//          Demonstrates how high-level operations are built from fundamental gates.
+// -----------------------------------------------------------------------------
 
+// Gate-Level Sequential Shifter - FSM-controlled universal shifter
+// Implements all shift types using only basic gates (NAND, AND) with sequential operation
+// Provides educational insight into hardware construction principles
 module gate_level_seq_shifter (
-    input clk,
-    input rst,                // async reset
-    input start,              // start signal
-    input [1:0] ctrl,         // 2-bit control (00–11)
-    input [2:0] shift_amt,    // shift amount (0–7)
-    input [7:0] data_in,      // input data
-    output reg [7:0] data_out,// final output
-    output reg done           // done flag
-    );
+    input clk,                  // System clock for sequential operation
+    input rst,                  // Asynchronous reset (active high)
+    input start,                // Start signal to begin shift operation
+    input [1:0] ctrl,           // 2-bit control: 00=SLL, 01=SRL, 10=SRA, 11=ROR
+    input [2:0] shift_amt,      // Shift amount (0-7 positions)
+    input [7:0] data_in,        // 8-bit input data to be shifted
+    output reg [7:0] data_out,  // 8-bit final shifted output
+    output reg done             // Done flag indicating completion
+);
 
-    reg [7:0] shift_reg;      // internal shift register
-    reg [2:0] count;          // number of shifts performed
-    reg [2:0] target;         // shift_amt latched
-    reg busy;                 // internal busy flag
+    // Internal state registers for FSM operation
+    reg [7:0] shift_reg;        // Internal shift register holding current data
+    reg [2:0] count;            // Counter tracking number of shifts performed
+    reg [2:0] target;           // Target shift amount (latched from shift_amt)
+    reg busy;                   // Internal busy flag for FSM control
 
-    wire ctrl0_n, ctrl1_n;
-    wire ctrl_00, ctrl_01, ctrl_10, ctrl_11;
+    // Gate-level control signal decoding wires
+    wire ctrl0_n, ctrl1_n;      // Inverted control bits
+    wire ctrl_00, ctrl_01, ctrl_10, ctrl_11;  // Decoded control signals
 
-    // Control decoding using NAND + AND gates
-    nand(ctrl0_n, ctrl[0], ctrl[0]);   // ~ctrl[0]
-    nand(ctrl1_n, ctrl[1], ctrl[1]);   // ~ctrl[1]
+    // Control decoding using only basic NAND and AND gates
+    nand(ctrl0_n, ctrl[0], ctrl[0]);   // Generate ~ctrl[0] using NAND gate
+    nand(ctrl1_n, ctrl[1], ctrl[1]);   // Generate ~ctrl[1] using NAND gate
 
-    and(ctrl_00, ctrl1_n, ctrl0_n);    // 00: Logical Left
-    and(ctrl_01, ctrl1_n, ctrl[0]);    // 01: Logical Right
-    and(ctrl_10, ctrl[1],  ctrl0_n);   // 10: Arithmetic Right
+    and(ctrl_00, ctrl1_n, ctrl0_n);    // 00: Logical Left Shift
+    and(ctrl_01, ctrl1_n, ctrl[0]);    // 01: Logical Right Shift  
+    and(ctrl_10, ctrl[1],  ctrl0_n);   // 10: Arithmetic Right Shift
     and(ctrl_11, ctrl[1],  ctrl[0]);   // 11: Rotate Right
 
-    integer i;
+    integer i;                  // Loop variable for gate-level bit manipulation
 
-    // Manual gate-level shifting
-    reg [7:0] next_val;
+    // Temporary register for manual gate-level shifting logic
+    reg [7:0] next_val;        // Next value after one shift operation
 
-    // Sequential logic
+    // FSM Sequential Logic - Controls the shifting state machine
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             shift_reg <= 8'b0;
@@ -102,24 +114,28 @@ module gate_level_seq_shifter (
     end
 endmodule
 
+// Sequential Unsigned Multiplier - Gate-level 8-bit multiplier implementation
+// Uses shift-and-add algorithm with manual full adder construction
+// Demonstrates binary multiplication at the hardware level using basic gates
 module seq_unsigned_multiplier (
-    input clk,
-    input rst,              // reset
-    input start,            // start signal
-    input [7:0] a,          // multiplicand
-    input [7:0] b,          // multiplier
-    output reg [7:0] result,// lower 8 bits of product
-    output reg done         // done flag
-    );
+    input clk,                  // System clock for sequential operation
+    input rst,                  // Reset signal (active high)
+    input start,                // Start signal to begin multiplication
+    input [7:0] a,              // 8-bit multiplicand (first operand)
+    input [7:0] b,              // 8-bit multiplier (second operand)
+    output reg [7:0] result,    // 8-bit result (lower bits of 16-bit product)
+    output reg done             // Done flag indicating completion
+);
 
-    reg [15:0] regA;        // Shift register A: multiplicand (shifted left)
-    reg [15:0] regB;        // Shift register B: multiplier + accumulator (shifted right)
-    reg [3:0] count;        // loop counter
+    // Internal registers for shift-and-add multiplication algorithm
+    reg [15:0] regA;            // Shift register A: multiplicand (shifted left each cycle)
+    reg [15:0] regB;            // Shift register B: multiplier + accumulator (shifted right)
+    reg [3:0] count;            // Loop counter for 8-bit multiplication (0 to 7)
 
-    reg [15:0] adder_out;   // adder output
-    reg add_enable;         // whether to add regA to upper bits of regB
+    reg [15:0] adder_out;       // Output from the 16-bit full adder
+    reg add_enable;             // Control signal for conditional addition
 
-    integer i;
+    integer i;                  // Loop variable for gate-level adder implementation
 
     // Full 16-bit adder using AND/OR
     function [15:0] full_adder_16bit;

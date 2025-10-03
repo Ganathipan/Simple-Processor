@@ -1,15 +1,31 @@
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188] 
+// Date: 2025-06-22
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// Original Author: Isuru Nawinne (14-April-2020)
+// -----------------------------------------------------------------------------
+// CO224Assembler_Modified.c - Assembly Language Toolchain
+// Purpose: Converts human-readable assembly language programs into processor-
+//          compatible machine code. Supports complete instruction set including
+//          arithmetic, logic, memory, and control flow instructions.
+// -----------------------------------------------------------------------------
+
 /*
-Program	: CO224 Assembler
-Author	: Isuru Nawinne
-Date		: 14-April-2020
+Program Description:
 
-Description:
+This enhanced assembler converts assembly language programs into machine code for 
+the CO224 processor project. It supports an extended instruction set architecture
+with the following capabilities:
 
-This program can be used to convert manually-written textual assembly programs into machine code for CO224 laboratory exercises 5 and 6.
-(If you feel especially adventurous, you can write the programs in machine code itself by yourself! Too lazy for that? Then use this assembler!)
+SUPPORTED INSTRUCTION SET:
+- Data Movement: loadi, mov
+- Arithmetic: add, sub, mul  
+- Logic: and, or
+- Bit Operations: sll, srl, sra, ror (shift/rotate)
+- Memory Access: lwd, lwi, swd, swi
+- Control Flow: j, beq, bne
 
-This simple assembler assumes an ISA containing the following instructions: loadi, mov, add, sub, and, or, j, beq, lwd, lwi, swd. 
-All instructions are encoded into 32-bit words based on the following format:
+INSTRUCTION ENCODING FORMAT (32-bit words):
 
 Bits 31-24 : OP-CODE				: Given as one of (loadi, mov, add, sub, and, or, j, beq, lwd, lwi, swd)
 Bits 16-23 : DESTINATION(RD/IMM)	: Given as a register number (0-7), or an 8-bit memory address as an immediate value in hex (e.g. 0xFF)

@@ -1,25 +1,31 @@
-/*
-Module      : Instruction Cache
-Author      : [Your Name]
-Date        : [Date]
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2025-06-22
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
+// instructionCache.v - Instruction Cache Implementation
+// Purpose: Implements a direct-mapped instruction cache for high-performance
+//          instruction fetching. Provides CPU-cache interface with block-level
+//          fetching from main memory for improved instruction bandwidth.
+// -----------------------------------------------------------------------------
 
-Description :
-Instruction Cache for CO224 Lab 6 Part 3
-Direct-mapped, 8 blocks of 16 Bytes each.
-Handles instruction fetches with artificial latencies and CPU stalling.
-*/
-
+// Instruction Cache Module - High-performance instruction caching system
+// Direct-mapped cache optimized for instruction fetch patterns
+// 8 blocks × 16 bytes per block = 128 bytes total capacity
+// Fetches 4 instructions (16 bytes) per cache line for spatial locality
 module inst_cache(
-    input wire clock,
-    input wire reset,
-    input wire [31:0] address,      // Full byte address
-    output reg [31:0] readdata,   // Fetched instruction word
-    output reg busywait,     // CPU stall signal
-    // interface to instruction memory
-    output reg mem_read,
-    output reg [5:0] mem_address,
-    input wire [127:0] mem_readdata,
-    input wire mem_busywait
+    // CPU Interface Signals
+    input wire clock,               // System clock
+    input wire reset,               // Cache reset signal  
+    input wire [31:0] address,      // 32-bit instruction address from PC
+    output reg [31:0] readdata,     // 32-bit instruction word to CPU
+    output reg busywait,            // CPU stall signal during cache miss
+    
+    // Instruction Memory Interface Signals
+    output reg mem_read,            // Memory read request
+    output reg [5:0] mem_address,   // 6-bit block address to memory
+    input wire [127:0] mem_readdata,// 128-bit block data from memory (4 instructions)
+    input wire mem_busywait         // Memory busy signal
 );
 
 // -----------------------

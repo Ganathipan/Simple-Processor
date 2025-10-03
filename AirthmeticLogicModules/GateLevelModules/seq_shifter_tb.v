@@ -1,20 +1,29 @@
+// -----------------------------------------------------------------------------
 // Authors: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
 // Date: 2025-06-22
-// Institution: Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
+// seq_shifter_tb.v - Gate-Level Sequential Shifter Testbench
+// Purpose: Comprehensive verification testbench for the gate-level sequential
+//          shifter implementation. Tests all shift types (SLL, SRL, SRA, ROR)
+//          with various shift amounts and generates waveforms for analysis.
+// -----------------------------------------------------------------------------
 
+// Gate-Level Shifter Testbench - Verification environment for sequential shifter
+// Provides systematic testing of all shift operations with automated test tasks
 module gate_level_seq_shifter_tb;
 
-    // Inputs
-    reg clk;
-    reg rst;
-    reg start;
-    reg [1:0] ctrl;
-    reg [2:0] shift_amt;
-    reg [7:0] data_in;
+    // Testbench Input Signals (driven by testbench)
+    reg clk;                        // Test clock generation
+    reg rst;                        // Reset control for UUT  
+    reg start;                      // Start signal for shift operation
+    reg [1:0] ctrl;                 // Shift type control (00=SLL, 01=SRL, 10=SRA, 11=ROR)
+    reg [2:0] shift_amt;            // Shift amount (0-7 positions)
+    reg [7:0] data_in;              // Input data to be shifted
 
-    // Outputs
-    wire [7:0] data_out;
-    wire done;
+    // Testbench Output Signals (monitored from UUT)
+    wire [7:0] data_out;            // Shifted output data
+    wire done;                      // Completion flag from shifter
 
     // Instantiate the Unit Under Test (UUT)
     gate_level_seq_shifter uut (

@@ -1,20 +1,24 @@
-/*
-Module	: 256x8-bit instruction memory (16-Byte blocks)
-Author	: Isuru Nawinne
-Date		: 10/06/2020
+// -----------------------------------------------------------------------------
+// Author: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// Date: 2025-06-22
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// Original Author: Isuru Nawinne (10/06/2020)
+// -----------------------------------------------------------------------------
+// instructionMem.v - Main Instruction Memory Implementation  
+// Purpose: Implements main memory for instruction storage with realistic timing
+//          characteristics. Provides block-based instruction transfers (16 bytes)
+//          with sample program initialization for processor testing.
+// -----------------------------------------------------------------------------
 
-Description	:
-
-This file presents a primitive instruction memory module for CO224 Lab 6 - Part 3
-This memory allows instructions to be read as 16-Byte blocks
-*/
-
+// Instruction Memory Module - Main memory for instruction storage
+// 1024×8-bit memory organized as 64 blocks of 16 bytes each
+// Provides 40ns access latency and includes sample program initialization
 module instruction_memory(
-	input clock,
-	input read,
-	input [5:0] address,
-	output reg [127:0] readinst,
-	output reg busywait
+	input clock,                    // System clock
+	input read,                     // Read enable from instruction cache
+	input [5:0] address,            // 6-bit block address (64 possible blocks)
+	output reg [127:0] readinst,    // 128-bit block data (4 instructions × 32 bits)
+	output reg busywait             // Memory busy signal to cache
 );
 
 reg readaccess;

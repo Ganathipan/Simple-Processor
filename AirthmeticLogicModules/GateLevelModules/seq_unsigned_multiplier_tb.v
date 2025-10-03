@@ -1,15 +1,27 @@
-// Authors: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]
+// -----------------------------------------------------------------------------
+// Authors: S. Ganathipan [E/21/148], K. Jarshigan [E/21/188]  
 // Date: 2025-06-22
-// Institution: Computer Engineering Department, Faculty of Engineering, University of Peradeniya (UOP)
+// Institution: Computer Engineering Department, Faculty of Engineering, UOP
+// -----------------------------------------------------------------------------
+// seq_unsigned_multiplier_tb.v - Sequential Multiplier Testbench
+// Purpose: Verification testbench for gate-level sequential multiplier using
+//          shift-and-add algorithm. Tests various multiplication scenarios
+//          including edge cases and generates timing analysis waveforms.
+// -----------------------------------------------------------------------------
 
+// Sequential Multiplier Testbench - Verification environment for gate-level multiplier  
+// Provides systematic testing of 8-bit multiplication with overflow handling
 module seq_unsigned_multiplier_tb;
 
-    reg clk;
-    reg rst;
-    reg start;
-    reg [7:0] a, b;
-    wire [7:0] result;
-    wire done;
+    // Testbench Control Signals
+    reg clk;                        // Test clock generation
+    reg rst;                        // Reset signal for multiplier
+    reg start;                      // Start multiplication operation
+    reg [7:0] a, b;                 // 8-bit multiplicand and multiplier inputs
+    
+    // Testbench Monitor Signals  
+    wire [7:0] result;              // 8-bit multiplication result (lower bits)
+    wire done;                      // Multiplication completion flag
 
     // Instantiate the multiplier
     seq_unsigned_multiplier uut (
